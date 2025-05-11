@@ -87,6 +87,33 @@ public:
       if (index >= curr_idx) throw std::out_of_range("Išeina už vektoriaus ribų");
       return vector[index];
     }
+//leidžia pasiekti pirmąjį elementą
+  T& front() {
+      if (curr_idx == 0) {
+        throw std::out_of_range("Vektorius tusčias");
+      }
+      return vector[0];
+    }
+//leidžia pasiekti paskutinįjį elementą
+  T& back() {
+      if (curr_idx == 0) {
+        throw std::out_of_range("Vektorius tusčias");
+      }
+      return vector[cur_idx - 1];
+    }
+//Pointer to the underlying element storage
+  T* data() noexcept { return vector; }
+
+  //Iteratorius į vektoriaus pradžią
+  T* begin() noexcept {
+      return vector;
+    }
+   //Const iteratorius į vektoriaus pradžią
+  const T* cbegin() const noexcept {
+      return vector;
+    }
+
+
 
 
 };
