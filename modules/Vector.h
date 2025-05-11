@@ -43,7 +43,7 @@ public:
 
     ~Vector(){
       for (size_t i = 0; i < curr_idx; ++i) {
-        alloc.destroy(vector + i);
+        destroy_at(vector + i);
       }
       if (vector) {
         alloc.deallocate(vector, cpct); // free memory
@@ -57,7 +57,7 @@ public:
   Vector& operator=(const Vector& other) {
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
-          alloc.destroy(vector + i);
+          destroy_at(vector + i);
         if (vector)
           alloc.deallocate(vector, cpct);
 
