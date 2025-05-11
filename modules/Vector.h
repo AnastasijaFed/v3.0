@@ -8,14 +8,19 @@
 #include <stdexcept>
 #include <utility>     // for std::move
 #include <algorithm>
+#include <memory>
+
 using namespace std;
 
-template<class T> class Vector {
+template<class T>, typename Allocator = allocator<T>>
+
+class Vector {
 
 private:
     T* vector;   // pointer to first data element
     size_t capacity;   // current memory capacity
     size_t curr_idx;   // current vector size (same as numel)
+    Allocator alloc;
 
 
 
@@ -26,17 +31,25 @@ public:
         vector = nullptr;
         capacity = 0;
         curr_idx = 0;
+        alloc = Allocator();
       }
 
     Vector(size_t count, const T& value){
-      data = new T[count];
-      fill(data, data + count, value);
+      vector = alloc.allocate(count);
       capacity = count;
       curr_idx = count;
+      for (size_t i = 0; i < count; ++i) {
+        alloc.construct(vector + i, value);
+      }
       }
 
     ~Vector(){
-      delete[] vector;
+      for (size_t i = 0; i < curr_idx; ++i) {
+        alloc.destroy(vector + i);
+      }
+      if (vector) {
+        alloc.deallocate(vector, capacity); // free memory
+      }
       }
 
     T& operator[](const size_t index){
@@ -45,27 +58,33 @@ public:
 //copy assignment operator
   vectorClass& operator=(const vectorClass& other) {
       if (this != &other) {
-        delete[] vector;
+        for (size_t i = 0; i < curr_idx; ++i)
+          alloc.destroy(vector + i);
+        if (vector)
+          alloc.deallocate(vector, capacity);
 
-        curr_idx = other.curr_idx;
         capacity = other.capacity;
-        vector = new T[capacity];
-        std::copy(other.vector, other.vector + curr_idx, vector);  // deep copy
+        curr_idx = other.curr_idx;
+        vector = alloc.allocate(capacity);
+        for (size_t i = 0; i < curr_idx; ++i)
+          alloc.construct(vector + i, other.vector[i]);
       }
       return *this;
     }
 //move assignment operator
   vectorClass& operator=(vectorClass&& other) noexcept {
       if (this != &other) {
-        delete[] vector;
+        for (size_t i = 0; i < curr_idx; ++i)
+          alloc.destroy(vector + i);
+        if (vector)
+          alloc.deallocate(vector, capacity);
 
         vector = other.vector;
-        curr_idx = other.curr_idx;
         capacity = other.capacity;
-
+        curr_idx = other.curr_idx;
         other.vector = nullptr;
-        other.curr_idx = 0;
         other.capacity = 0;
+        other.curr_idx = 0;
       }
       return *this;
     }
@@ -124,8 +143,37 @@ public:
   bool empty() const noexcept {
       return curr_idx == 0;
     }
-  bool empty() const noexcept {
-      return curr_idx == 0;
+  //grąžina vektoriaus dydį
+  size_t size() const noexcept {
+      return crr_idx;
+    }
+
+  //padidina vektoriaus capacity
+  void reserve(size_t new_cap) {
+      if (new_cap <= capacity) return;
+
+      // Alokuojam naują dalį atminties
+      T* new_data = alloc.allocate(new_cap);
+
+      // perkeliam egzistuojančius elementus į rezervuotą atmintį
+      for (size_t i = 0; i < curr_idx; ++i) {
+        alloc.construct(new_data + i, std::move_if_noexcept(vector[i]));
+        alloc.destroy(vector + i);
+      }
+
+      // Dealokuojam seną atmintį
+      if (vector) {
+        alloc.deallocate(vector, capacity);
+      }
+
+
+      vector = new_data;
+      capacity = new_cap;
+    }
+
+  //grąžina vektoriaus capacity
+  size_t capacity() const noexcept {
+      return capacity;
     }
 
 
