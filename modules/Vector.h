@@ -42,7 +42,7 @@ public:
     T& operator[](const size_t index){
       return vector[index];
         }
-
+//copy assignment operator
   vectorClass& operator=(const vectorClass& other) {
       if (this != &other) {
         delete[] vector;
@@ -54,7 +54,7 @@ public:
       }
       return *this;
     }
-
+//move assignment operator
   vectorClass& operator=(vectorClass&& other) noexcept {
       if (this != &other) {
         delete[] vector;
@@ -114,15 +114,18 @@ public:
     }
   //Iteratorius į vektoriaus pabaigą
   T* end() noexcept {
-      return vector + size_;
+      return vector + curr_idx;
     }
   //Const iteratorius į vektoriaus pabaigą
   const T* cend() const noexcept {
-      return vector + size_;
+      return vector + curr_idx;
     }
 //patikrina ar vektorius yra tusčias
   bool empty() const noexcept {
-      return size_ == 0;
+      return curr_idx == 0;
+    }
+  bool empty() const noexcept {
+      return curr_idx == 0;
     }
 
 
