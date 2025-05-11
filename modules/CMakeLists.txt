@@ -10,7 +10,9 @@ add_library(studentlib STATIC
         StudentDeque.h
         Human.cpp
         Human.h
+        vectorClass.cpp
+        vectorClass.h
+
 )
 
-# Make headers in this directory available to anyone linking to studentlib
 target_include_directories(studentlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
