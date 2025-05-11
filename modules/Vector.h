@@ -10,13 +10,13 @@
 
 using namespace std;
 
-template<class T>, typename Allocator = allocator<T>>
+template<class T, typename Allocator = allocator<T>>
 
 class Vector {
 
 private:
     T* vector;   // pointer to first data element
-    size_t capacity;   // current memory capacity
+    size_t cpct;   // current memory capacity
     size_t curr_idx;   // current vector size (same as numel)
     Allocator alloc;
 
@@ -27,14 +27,14 @@ public:
   //default konstruktorius
     Vector(){
         vector = nullptr;
-        capacity = 0;
+        cpct = 0;
         curr_idx = 0;
         alloc = Allocator();
       }
 
     Vector(size_t count, const T& value){
       vector = alloc.allocate(count);
-      capacity = count;
+      cpct = count;
       curr_idx = count;
       for (size_t i = 0; i < count; ++i) {
         alloc.construct(vector + i, value);
@@ -46,7 +46,7 @@ public:
         alloc.destroy(vector + i);
       }
       if (vector) {
-        alloc.deallocate(vector, capacity); // free memory
+        alloc.deallocate(vector, cpct); // free memory
       }
       }
 
@@ -54,44 +54,44 @@ public:
       return vector[index];
         }
 //copy assignment operator
-  vectorClass& operator=(const vectorClass& other) {
+  Vector& operator=(const Vector& other) {
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
           alloc.destroy(vector + i);
         if (vector)
-          alloc.deallocate(vector, capacity);
+          alloc.deallocate(vector, cpct);
 
-        capacity = other.capacity;
+        cpct = other.cpct;
         curr_idx = other.curr_idx;
-        vector = alloc.allocate(capacity);
+        vector = alloc.allocate(cpct);
         for (size_t i = 0; i < curr_idx; ++i)
           alloc.construct(vector + i, other.vector[i]);
       }
       return *this;
     }
 //move assignment operator
-  vectorClass& operator=(vectorClass&& other) noexcept {
+  Vector& operator=(Vector&& other) noexcept {
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
           alloc.destroy(vector + i);
         if (vector)
-          alloc.deallocate(vector, capacity);
+          alloc.deallocate(vector, cpct);
 
         vector = other.vector;
-        capacity = other.capacity;
+        cpct = other.cpct;
         curr_idx = other.curr_idx;
         other.vector = nullptr;
-        other.capacity = 0;
+        other.cpct = 0;
         other.curr_idx = 0;
       }
       return *this;
     }
     //pakeičia dabartines vektoriaus reikšmes į kopijas reikšmių value count kartų
     void assign(size_t count, const T& value){
-      if (count > capacity) {
+      if (count > cpct) {
         delete[] vector;
         vector = new T[count];
-        capacity = count;
+        cpct = count;
       }
       for (size_t i = 0; i < count; ++i) {
         vector[i] = value;
@@ -116,7 +116,7 @@ public:
       if (curr_idx == 0) {
         throw std::out_of_range("Vektorius tusčias");
       }
-      return vector[cur_idx - 1];
+      return vector[curr_idx - 1];
     }
 //Pointer to the underlying element storage
   T* data() noexcept { return vector; }
@@ -143,12 +143,12 @@ public:
     }
   //grąžina vektoriaus dydį
   size_t size() const noexcept {
-      return crr_idx;
+      return curr_idx;
     }
 
   //padidina vektoriaus capacity
   void reserve(size_t new_cap) {
-      if (new_cap <= capacity) return;
+      if (new_cap <= cpct) return;
 
       // Alokuojam naują dalį atminties
       T* new_data = alloc.allocate(new_cap);
@@ -161,17 +161,17 @@ public:
 
       // Dealokuojam seną atmintį
       if (vector) {
-        alloc.deallocate(vector, capacity);
+        alloc.deallocate(vector, cpct);
       }
 
 
       vector = new_data;
-      capacity = new_cap;
+      cpct = new_cap;
     }
 
   //grąžina vektoriaus capacity
   size_t capacity() const noexcept {
-      return capacity;
+      return cpct;
     }
 
   //ištrina visus elementus

@@ -95,6 +95,7 @@ int main() {
             }
             if (!studentsClass.empty()) {
                studentClass.printStudentListClass(studentsClass);*/
+            Vector<StudentClass> students;
 
 
 
