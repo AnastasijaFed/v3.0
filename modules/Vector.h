@@ -82,6 +82,11 @@ public:
 
       curr_idx = count;
     }
+//leidžia pasiekti tam tikrą elementą tikrinant ribas
+  T& at(size_t index) {
+      if (index >= curr_idx) throw std::out_of_range("Išeina už vektoriaus ribų");
+      return vector[index];
+    }
 
 
 };
