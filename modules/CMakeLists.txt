@@ -10,7 +10,6 @@ add_library(studentlib STATIC
         StudentDeque.h
         Human.cpp
         Human.h
-        Vector.cpp
         Vector.h
 
 )

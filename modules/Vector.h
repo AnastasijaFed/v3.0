@@ -176,6 +176,15 @@ public:
       return capacity;
     }
 
+  //ištrina visus elementus
+  void clear() noexcept {
+      for (size_t i = 0; i < curr_idx; ++i) {
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
+      }
+      curr_idx = 0;
+    }
+
+
 
 
 

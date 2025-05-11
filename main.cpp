@@ -3,6 +3,7 @@
 #include "modules/StudentDeque.h"
 #include "modules/StudentClass.h"
 #include "modules/Human.h"
+#include "modules/Vector.h"
 using namespace std;
 
 
@@ -31,7 +32,7 @@ int main() {
         cout << "1 - Įvesti studentų duomenis ranka\n";
         cout << "2 - Generuoti pažymius\n";
         cout << "3 - Generuoti studentų vardus, pavardes ir pažymius\n";
-        cout << "4 - Nuskaityti iš failo\n";
+        cout << "4 - `vector\n";
         cout << "5 - Rūšiuoti\n";
         cout << "6 - Sukurti failus\n";
         cout << "7 - Testas tik su vektoriais\n";
@@ -88,13 +89,15 @@ int main() {
         }
         case 4:
         {
-            studentsClass2 = studentClass.readStudentsFileClass(std::string("/Users/anastasijafedorenko/Desktop/OOP1.1/cmake-build-debug/kursiokai.txt"));
+            /*studentsClass2 = studentClass.readStudentsFileClass(std::string("/Users/anastasijafedorenko/Desktop/OOP1.1/cmake-build-debug/kursiokai.txt"));
             for (auto& student : studentsClass2) {
                 studentsClass.push_back(student);
             }
             if (!studentsClass.empty()) {
-               studentClass.printStudentListClass(studentsClass);
-            }
+               studentClass.printStudentListClass(studentsClass);*/
+            Vector<StudentClass> students;
+
+
 
             break;
         }
