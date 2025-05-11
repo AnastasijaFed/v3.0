@@ -1,9 +1,7 @@
 //
 // Created by Anastasija Fedorenko on 2025-05-11.
 //
-
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 #include <cstddef>
 #include <stdexcept>
 #include <utility>     // for std::move
@@ -192,4 +190,4 @@ public:
 
 
 
-#endif //VECTORCLASS_H
+//VECTORCLASS_H
