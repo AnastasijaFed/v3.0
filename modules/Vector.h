@@ -112,6 +112,18 @@ public:
   const T* cbegin() const noexcept {
       return vector;
     }
+  //Iteratorius į vektoriaus pabaigą
+  T* end() noexcept {
+      return vector + size_;
+    }
+  //Const iteratorius į vektoriaus pabaigą
+  const T* cend() const noexcept {
+      return vector + size_;
+    }
+//patikrina ar vektorius yra tusčias
+  bool empty() const noexcept {
+      return size_ == 0;
+    }
 
 
 
