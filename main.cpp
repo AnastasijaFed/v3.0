@@ -96,7 +96,9 @@ int main() {
             if (!studentsClass.empty()) {
                studentClass.printStudentListClass(studentsClass);*/
             Vector<StudentClass> studentsVector;
-           cout<< studentsVector.size();
+            StudentClass student("Anastasija", "Fedorenko", {9, 8, 10}, 10, 9.6);
+            studentsVector.push_back(student);
+            cout << studentsVector[0]<<endl;
 
 
 

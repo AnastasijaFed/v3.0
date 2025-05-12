@@ -152,19 +152,15 @@ public:
 
       // Alokuojam naują dalį atminties
       T* new_data = alloc.allocate(new_cap);
-
       // perkeliam egzistuojančius elementus į rezervuotą atmintį
       for (size_t i = 0; i < curr_idx; ++i) {
-        alloc.construct(new_data + i, std::move_if_noexcept(vector[i]));
-        alloc.destroy(vector + i);
+        std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
+        destroy_at(vector + i);
       }
-
       // Dealokuojam seną atmintį
       if (vector) {
         alloc.deallocate(vector, cpct);
       }
-
-
       vector = new_data;
       cpct = new_cap;
     }
@@ -180,6 +176,16 @@ public:
         allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
       curr_idx = 0;
+    }
+
+   //prideda elementą į vektoriaus pabaigą
+  void push_back(const T& value) {
+
+      if (curr_idx == cpct) {
+        reserve(cpct == 0 ? 1 : cpct * 2);
+      }
+      allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
+      ++curr_idx;
     }
 
 
