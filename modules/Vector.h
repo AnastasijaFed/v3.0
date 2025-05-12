@@ -112,15 +112,50 @@ public:
       curr_idx = count;
     }
 
-    T& operator[](const size_t index){
-      return vector[index];
-        }
+  //pakeičia dabartines vektoriaus reikšmes į kopiją range reikšmių value count kartų
+  template<typename InputIt>
+void assign_range(InputIt first, InputIt last) {
+      size_type count = std::distance(first, last);
 
-//leidžia pasiekti tam tikrą elementą tikrinant ribas
+      // paašalinam dabartinius elementus
+      for (size_type i = 0; i < curr_idx; ++i) {
+        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+      }
+
+      if (count > cpct) {
+        if (vector) {
+          alloc.deallocate(vector, cpct);
+        }
+        vector = alloc.allocate(count);
+        cpct = count;
+      }
+
+      // sukonstruojam naujus elementus
+      size_type i = 0;
+      for (InputIt it = first; it != last; ++it, ++i) {
+        std::allocator_traits<Allocator>::construct(alloc, vector + i, *it);
+      }
+
+      curr_idx = count;
+    }
+//grąžina allocator'ių
+  allocator_type get_allocator() const noexcept {
+      return alloc;
+    }
+
+    //ELEMENT ACCESS
+
+  //leidžia pasiekti tam tikrą elementą tikrinant ribas
   T& at(size_t index) {
       if (index >= curr_idx) throw std::out_of_range("Išeina už vektoriaus ribų");
       return vector[index];
     }
+
+    //leidžia pasiekti tam tikrą elementą netikrinant ribų
+    T& operator[](const size_t index){
+      return vector[index];
+        }
+
 //leidžia pasiekti pirmąjį elementą
   T& front() {
       if (curr_idx == 0) {
@@ -145,6 +180,7 @@ public:
   iterator end() noexcept { return vector + curr_idx; }
   const_iterator cend() const noexcept { return vector + curr_idx; }
 
+ //CAPACITY
 //patikrina ar vektorius yra tusčias
   bool empty() const noexcept {
       return curr_idx == 0;
@@ -152,6 +188,10 @@ public:
   //grąžina vektoriaus dydį
   size_t size() const noexcept {
       return curr_idx;
+    }
+    //grąžina didžiausia galimą elementų skaičių
+  size_type max_size() const noexcept {
+      return allocator_traits<Allocator>::max_size(alloc);
     }
 
   //padidina vektoriaus capacity
@@ -177,6 +217,28 @@ public:
   size_t capacity() const noexcept {
       return cpct;
     }
+ //atlaisvina nenaudojamą atmintį
+  void shrink_to_fit() {
+      if (cpct > curr_idx) {
+        T* new_data = alloc.allocate(curr_idx);
+
+        // perkeliam egzistuojančius elementus į naują atminties bloką
+        for (size_t i = 0; i < curr_idx; ++i) {
+          std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
+          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+        }
+
+        // dealokuoti seną atmintį
+        if (vector) {
+          alloc.deallocate(vector, cpct);
+        }
+
+        vector = new_data;
+        cpct = curr_idx;
+      }
+    }
+
+//MODIFIERS
 
   //ištrina visus elementus
   void clear() noexcept {
@@ -185,18 +247,7 @@ public:
       }
       curr_idx = 0;
     }
-
-   //prideda elementą į vektoriaus pabaigą
-  void push_back(const T& value) {
-
-      if (curr_idx == cpct) {
-        reserve(cpct == 0 ? 1 : cpct * 2);
-      }
-      allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
-      ++curr_idx;
-    }
-
-//įterpia elementą į nurodytą poziciją
+  //įterpia elementą į nurodytą poziciją
   iterator insert(const_iterator pos, const T& value) {
       size_t index = pos - vector;
 
@@ -283,6 +334,19 @@ void insert_range(T* pos, InputIt first, InputIt last) {
 
       curr_idx += count;
     }
+   //TO-DO emplace
+
+   //prideda elementą į vektoriaus pabaigą
+  void push_back(const T& value) {
+
+      if (curr_idx == cpct) {
+        reserve(cpct == 0 ? 1 : cpct * 2);
+      }
+      allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
+      ++curr_idx;
+    }
+
+
 //ištrina elementą nurodytoje pozicijoje
   T* erase(T* pos) {
       size_t index = pos - vector;
