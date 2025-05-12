@@ -98,7 +98,11 @@ int main() {
             Vector<StudentClass> studentsVector;
             StudentClass student("Anastasija", "Fedorenko", {9, 8, 10}, 10, 9.6);
             studentsVector.push_back(student);
-            cout << studentsVector[0]<<endl;
+            StudentClass student2("Vardenis", "Pavardenis", {6, 7, 8}, 10, 0);
+            studentsVector.insert(studentsVector.begin(), student2);
+            for(auto& student : studentsVector){
+              cout << student<<endl;
+              }
 
 
 
