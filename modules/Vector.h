@@ -23,8 +23,22 @@ private:
 
 
 public:
-  using iterator = T*;
-  using const_iterator = const T*;
+//MEMBER TYPE DEFINITIONS
+  using value_type             = T;
+  using allocator_type         = Allocator;
+  using size_type              = size_t;
+  using difference_type        = ptrdiff_t;
+  using reference              = value_type&;
+  using const_reference        = const value_type&;
+  using pointer                = typename allocator_traits<Allocator>::pointer;
+  using const_pointer          = typename allocator_traits<Allocator>::const_pointer;
+  using iterator               = pointer;
+  using const_iterator         = const_pointer;
+  using reverse_iterator       = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+
+  //MEMBER FUNCTIONS
 
   //default konstruktorius
     Vector(){
@@ -33,7 +47,7 @@ public:
         curr_idx = 0;
         alloc = Allocator();
       }
-
+  //konstruktorius
     Vector(size_t count, const T& value){
       vector = alloc.allocate(count);
       cpct = count;
@@ -42,7 +56,7 @@ public:
         alloc.construct(vector + i, value);
       }
       }
-
+  //destruktorius
     ~Vector(){
       for (size_t i = 0; i < curr_idx; ++i) {
         destroy_at(vector + i);
@@ -51,11 +65,7 @@ public:
         alloc.deallocate(vector, cpct); // free memory
       }
       }
-
-    T& operator[](const size_t index){
-      return vector[index];
-        }
-//copy assignment operator
+  //copy assignment operator
   Vector& operator=(const Vector& other) {
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
@@ -71,7 +81,7 @@ public:
       }
       return *this;
     }
-//move assignment operator
+  //move assignment operator
   Vector& operator=(Vector&& other) noexcept {
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
@@ -88,8 +98,8 @@ public:
       }
       return *this;
     }
-    //pakeičia dabartines vektoriaus reikšmes į kopijas reikšmių value count kartų
-    void assign(size_t count, const T& value){
+  //pakeičia dabartines vektoriaus reikšmes į kopijas reikšmių value count kartų
+  void assign(size_t count, const T& value){
       if (count > cpct) {
         delete[] vector;
         vector = new T[count];
@@ -101,6 +111,11 @@ public:
 
       curr_idx = count;
     }
+
+    T& operator[](const size_t index){
+      return vector[index];
+        }
+
 //leidžia pasiekti tam tikrą elementą tikrinant ribas
   T& at(size_t index) {
       if (index >= curr_idx) throw std::out_of_range("Išeina už vektoriaus ribų");
