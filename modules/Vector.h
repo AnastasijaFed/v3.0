@@ -298,7 +298,7 @@ void insert_range(T* pos, InputIt first, InputIt last) {
         std::allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
 
-      curr_idx -= count;
+      curr_idx -=  count;
       return vector + start;
     }
 
