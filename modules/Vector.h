@@ -336,18 +336,7 @@ void insert_range(T* pos, InputIt first, InputIt last) {
     }
    //TO-DO emplace
 
-   //prideda elementą į vektoriaus pabaigą
-  void push_back(const T& value) {
-
-      if (curr_idx == cpct) {
-        reserve(cpct == 0 ? 1 : cpct * 2);
-      }
-      allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
-      ++curr_idx;
-    }
-
-
-//ištrina elementą nurodytoje pozicijoje
+  //ištrina elementą nurodytoje pozicijoje
   T* erase(T* pos) {
       size_t index = pos - vector;
       allocator_traits<Allocator>::destroy(alloc, vector + index);
@@ -380,6 +369,19 @@ void insert_range(T* pos, InputIt first, InputIt last) {
       curr_idx -=  count;
       return vector + start;
     }
+
+   //prideda elementą į vektoriaus pabaigą
+  void push_back(const T& value) {
+
+      if (curr_idx == cpct) {
+        reserve(cpct == 0 ? 1 : cpct * 2);
+      }
+      allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
+      ++curr_idx;
+    }
+
+
+
 
 
 
