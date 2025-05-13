@@ -349,27 +349,27 @@ iterator emplace(const_iterator pos, Args&&... args) {
             allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
             allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
+		//konstruojam naują objektą
+        // Naudojam forward, kad išsaugotumem value category (pvz. move paverčia arg į rvalue)
+        allocator_traits<Allocator>::construct(alloc, new_data + index, forward<Args>(args)...);
 
-        // 2. Construct the new element in-place with forwarded arguments
-        std::allocator_traits<Allocator>::construct(alloc, new_data + index, std::forward<Args>(args)...);
 
-        // 3. Move elements after insertion point
         for (size_t i = index; i < curr_idx; ++i) {
-            std::allocator_traits<Allocator>::construct(alloc, new_data + i + 1, std::move_if_noexcept(vector[i]));
-            std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+            allocator_traits<Allocator>::construct(alloc, new_data + i + 1, move_if_noexcept(vector[i]));
+            allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
         if (vector) alloc.deallocate(vector, cpct);
         vector = new_data;
         cpct = new_capacity;
     } else {
-        // Shift elements right to make space
+
         for (size_t i = curr_idx; i > index; --i) {
-            std::allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - 1]));
-            std::allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
+            allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - 1]));
+            allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
         }
 
-        // Naudojam forward, kad išsaugotumem value category (pvz. move paverčia arg į rvalue
+        // Naudojam forward, kad išsaugotumem value category (pvz. move paverčia arg į rvalue)
        allocator_traits<Allocator>::construct(alloc, vector + index, forward<Args>(args)...);
     }
 
