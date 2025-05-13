@@ -4,7 +4,7 @@
 #pragma once
 #include <cstddef>
 #include <stdexcept>
-#include <utility>     // for std::move
+#include <utility>
 #include <algorithm>
 #include <memory>
 
@@ -476,23 +476,51 @@ void emplace_back(Args&&... args) {
         }
         curr_idx = new_size;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    void swap(Vector& other) noexcept {
+    	swap(vector, other.vector);
+    	swap(cpct, other.cpct);
+    	swap(curr_idx, other.curr_idx);
+    	swap(alloc, other.alloc);
+}
 
 };
+//NON-MEMBER FUNCTIONS
 
+    template<class T, class Allocator>
+bool operator==(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    if (lhs.size() != rhs.size()) {
+        return false;
+    }
+    return equal(lhs.begin(), lhs.end(), rhs.begin());
+}
 
+template<class T, class Allocator>
+bool operator!=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    return !(lhs == rhs);
+}
+template<class T, class Allocator>
+bool operator<(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    return lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+template<class T, class Allocator>
+bool operator<=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    return !(rhs < lhs);
+}
+
+template<class T, class Allocator>
+bool operator>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    return rhs < lhs; // Daugiau yra tas pats, kas "dešinė pusė mažesnė už kairę".
+}
+
+template<class T, class Allocator>
+bool operator>=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
+    return !(lhs < rhs);
+}
+
+template <typename T, typename Allocator>
+void swap(Vector<T, Allocator>& lhs, Vector<T, Allocator>& rhs) noexcept {
+    lhs.swap(rhs);
+}
 
 //VECTORCLASS_H
