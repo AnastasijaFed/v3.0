@@ -24,18 +24,18 @@ private:
 
 public:
 //MEMBER TYPE DEFINITIONS
-  using value_type             = T;
-  using allocator_type         = Allocator;
-  using size_type              = size_t;
-  using difference_type        = ptrdiff_t;
-  using reference              = value_type&;
-  using const_reference        = const value_type&;
-  using pointer                = typename allocator_traits<Allocator>::pointer;
-  using const_pointer          = typename allocator_traits<Allocator>::const_pointer;
-  using iterator               = pointer;
-  using const_iterator         = const_pointer;
-  using reverse_iterator       = std::reverse_iterator<iterator>;
-  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using value_type = T;
+  using allocator_type = Allocator;
+  using size_type = size_t;
+  using difference_type = ptrdiff_t;
+  using reference = value_type&;
+  using const_reference = const value_type&;
+  using pointer = typename allocator_traits<Allocator>::pointer;
+  using const_pointer = typename allocator_traits<Allocator>::const_pointer;
+  using iterator = pointer;
+  using const_iterator = const_pointer;
+  using reverse_iterator = reverse_iterator<iterator>;
+  using const_reverse_iterator = reverse_iterator<const_iterator>;
 
 
   //MEMBER FUNCTIONS
@@ -62,7 +62,7 @@ public:
         destroy_at(vector + i);
       }
       if (vector) {
-        alloc.deallocate(vector, cpct); // free memory
+        alloc.deallocate(vector, cpct);
       }
       }
   //copy assignment operator
@@ -86,8 +86,7 @@ public:
       if (this != &other) {
         for (size_t i = 0; i < curr_idx; ++i)
           alloc.destroy(vector + i);
-        if (vector)
-          alloc.deallocate(vector, cpct);
+        if (vector) alloc.deallocate(vector, cpct);
 
         vector = other.vector;
         cpct = other.cpct;
@@ -115,11 +114,11 @@ public:
   //pakeičia dabartines vektoriaus reikšmes į kopiją range reikšmių value count kartų
   template<typename InputIt>
 void assign_range(InputIt first, InputIt last) {
-      size_type count = std::distance(first, last);
+      size_type count = distance(first, last);
 
       // paašalinam dabartinius elementus
       for (size_type i = 0; i < curr_idx; ++i) {
-        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
 
       if (count > cpct) {
@@ -133,7 +132,7 @@ void assign_range(InputIt first, InputIt last) {
       // sukonstruojam naujus elementus
       size_type i = 0;
       for (InputIt it = first; it != last; ++it, ++i) {
-        std::allocator_traits<Allocator>::construct(alloc, vector + i, *it);
+        allocator_traits<Allocator>::construct(alloc, vector + i, *it);
       }
 
       curr_idx = count;
@@ -147,7 +146,7 @@ void assign_range(InputIt first, InputIt last) {
 
   //leidžia pasiekti tam tikrą elementą tikrinant ribas
   T& at(size_t index) {
-      if (index >= curr_idx) throw std::out_of_range("Išeina už vektoriaus ribų");
+      if (index >= curr_idx) throw out_of_range("Išeina už vektoriaus ribų");
       return vector[index];
     }
 
@@ -159,18 +158,18 @@ void assign_range(InputIt first, InputIt last) {
 //leidžia pasiekti pirmąjį elementą
   T& front() {
       if (curr_idx == 0) {
-        throw std::out_of_range("Vektorius tusčias");
+        throw out_of_range("Vektorius tusčias");
       }
       return vector[0];
     }
 //leidžia pasiekti paskutinįjį elementą
   T& back() {
       if (curr_idx == 0) {
-        throw std::out_of_range("Vektorius tusčias");
+        throw out_of_range("Vektorius tusčias");
       }
       return vector[curr_idx - 1];
     }
-//Pointer to the underlying element storage
+
   T* data() noexcept { return vector; }
 
   //Iteratoriai
@@ -197,15 +196,13 @@ void assign_range(InputIt first, InputIt last) {
   //padidina vektoriaus capacity
   void reserve(size_t new_cap) {
       if (new_cap <= cpct) return;
-
-      // Alokuojam naują dalį atminties
       T* new_data = alloc.allocate(new_cap);
       // perkeliam egzistuojančius elementus į rezervuotą atmintį
       for (size_t i = 0; i < curr_idx; ++i) {
-        std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
+        allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
         destroy_at(vector + i);
       }
-      // Dealokuojam seną atmintį
+
       if (vector) {
         alloc.deallocate(vector, cpct);
       }
@@ -222,13 +219,11 @@ void assign_range(InputIt first, InputIt last) {
       if (cpct > curr_idx) {
         T* new_data = alloc.allocate(curr_idx);
 
-        // perkeliam egzistuojančius elementus į naują atminties bloką
         for (size_t i = 0; i < curr_idx; ++i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+          allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
-        // dealokuoti seną atmintį
         if (vector) {
           alloc.deallocate(vector, cpct);
         }
@@ -247,45 +242,42 @@ void assign_range(InputIt first, InputIt last) {
       }
       curr_idx = 0;
     }
+
   //įterpia elementą į nurodytą poziciją
   iterator insert(const_iterator pos, const T& value) {
       size_t index = pos - vector;
 
-   //ar uztenka atminties
       if (curr_idx >= cpct) {
         size_t new_capacity = (cpct == 0) ? 1 : cpct * 2;
         T* new_data = alloc.allocate(new_capacity);
 
-        //perkeliam pries iterpimo vieta
         for (size_t i = 0; i < index; ++i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+          allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
-        // iterpiam nauja elementa
-        std::allocator_traits<Allocator>::construct(alloc, new_data + index, value);
+        allocator_traits<Allocator>::construct(alloc, new_data + index, value);
 
-        // perkeliam likusius elementus po iterpimo
         for (size_t i = index; i < curr_idx; ++i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + i + 1, std::move_if_noexcept(vector[i]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+          allocator_traits<Allocator>::construct(alloc, new_data + i + 1, move_if_noexcept(vector[i]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
         if (vector) alloc.deallocate(vector, cpct);
         vector = new_data;
         cpct = new_capacity;
       } else {
-        //perkeliam reiksmes i desine
         for (size_t i = curr_idx; i > index; --i) {
-          std::allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - 1]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
+          allocator_traits<Allocator>::construct(alloc, vector + i, move_if_noexcept(vector[i - 1]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
         }
-        std::allocator_traits<Allocator>::construct(alloc, vector + index, value);
+        allocator_traits<Allocator>::construct(alloc, vector + index, value);
       }
 
       ++curr_idx;
       return vector + index;
     }
+
 //leidžia įterpti bet kokį konteinerį į Vector
   template<typename InputIt>
 void insert_range(T* pos, InputIt first, InputIt last) {
@@ -293,42 +285,38 @@ void insert_range(T* pos, InputIt first, InputIt last) {
       size_t count = distance(first, last);
 
       if (curr_idx + count > cpct) {
-        // Not enough capacity, reallocate
-        size_t new_cpct = std::max(cpct * 2, curr_idx + count);
+        size_t new_cpct = max(cpct * 2, curr_idx + count);
         T* new_data = alloc.allocate(new_cpct);
 
-        // Move elements before insertion point
         for (size_t i = 0; i < index; ++i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+          allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
-        // iterpiam nauja konteineri
         size_t insert_i = index;
         for (InputIt it = first; it != last; ++it, ++insert_i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + insert_i, *it);
+         allocator_traits<Allocator>::construct(alloc, new_data + insert_i, *it);
         }
 
-        // perkeliam visa likuti
         for (size_t i = index; i < curr_idx; ++i, ++insert_i) {
-          std::allocator_traits<Allocator>::construct(alloc, new_data + insert_i, std::move_if_noexcept(vector[i]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+          allocator_traits<Allocator>::construct(alloc, new_data + insert_i, move_if_noexcept(vector[i]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
         if (vector) alloc.deallocate(vector, cpct);
         vector = new_data;
         cpct = new_cpct;
       } else {
-        // perkeliam elementus i desine
+
         for (size_t i = curr_idx + count - 1; i >= index + count && i < SIZE_MAX; --i) {
-          std::allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - count]));
-          std::allocator_traits<Allocator>::destroy(alloc, vector + i - count);
+         allocator_traits<Allocator>::construct(alloc, vector + i, move_if_noexcept(vector[i - count]));
+          allocator_traits<Allocator>::destroy(alloc, vector + i - count);
         }
 
         // iterpiam range i jo vieta
         size_t insert_i = index;
         for (InputIt it = first; it != last; ++it, ++insert_i) {
-          std::allocator_traits<Allocator>::construct(alloc, vector + insert_i, *it);
+          allocator_traits<Allocator>::construct(alloc, vector + insert_i, *it);
         }
       }
 
@@ -346,7 +334,7 @@ iterator emplace(const_iterator pos, Args&&... args) {
 
 
         for (size_t i = 0; i < index; ++i) {
-            allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
+            allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
             allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 		//konstruojam naują objektą
@@ -365,7 +353,7 @@ iterator emplace(const_iterator pos, Args&&... args) {
     } else {
 
         for (size_t i = curr_idx; i > index; --i) {
-            allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - 1]));
+            allocator_traits<Allocator>::construct(alloc, vector + i, move_if_noexcept(vector[i - 1]));
             allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
         }
 
@@ -385,8 +373,8 @@ iterator emplace(const_iterator pos, Args&&... args) {
 
 
       for (size_t i = index + 1; i < curr_idx; ++i) {
-        std::allocator_traits<Allocator>::construct(alloc, vector + i - 1, std::move_if_noexcept(vector[i]));
-        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+       allocator_traits<Allocator>::construct(alloc, vector + i - 1, move_if_noexcept(vector[i]));
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
 
       --curr_idx;
@@ -401,12 +389,12 @@ iterator emplace(const_iterator pos, Args&&... args) {
 
 
       for (size_t i = start; i < end; ++i) {
-        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
 
       for (size_t i = end; i < curr_idx; ++i) {
-        std::allocator_traits<Allocator>::construct(alloc, vector + i - count, std::move_if_noexcept(vector[i]));
-        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+        allocator_traits<Allocator>::construct(alloc, vector + i - count, move_if_noexcept(vector[i]));
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
       }
 
       curr_idx -=  count;
@@ -431,7 +419,7 @@ void emplace_back(Args&&... args) {
         reserve(cpct == 0 ? 1 : cpct * 2);
     }
 
-    std::allocator_traits<Allocator>::construct(alloc, vector + curr_idx, forward<Args>(args)...);
+   allocator_traits<Allocator>::construct(alloc, vector + curr_idx, forward<Args>(args)...);
 
     ++curr_idx;
 }
@@ -522,5 +510,3 @@ template <typename T, typename Allocator>
 void swap(Vector<T, Allocator>& lhs, Vector<T, Allocator>& rhs) noexcept {
     lhs.swap(rhs);
 }
-
-//VECTORCLASS_H
