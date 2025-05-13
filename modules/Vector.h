@@ -436,6 +436,48 @@ void emplace_back(Args&&... args) {
     ++curr_idx;
 }
 
+// Pašalina paskutinį elementą.
+    void pop_back() {
+        if (curr_idx > 0) {
+            --curr_idx;
+            destroy_at(vector + curr_idx);
+        }
+    }
+    // Pakeičia vektoriaus dydį.
+    // Jei naujas dydis mažesnis už dabartinį, elementai gale yra sunaikinami.
+    // Jei naujas dydis didesnis, nauji elementai yra pridedami ir inicializuojami pagal nutylėjimą.
+    void resize(size_type new_size) {
+        if (new_size < curr_idx) {
+            destroy_range(vector + new_size, vector + curr_idx);
+        } else if (new_size > curr_idx) {
+            if (new_size > cpct) {
+                reserve(max(cpct == 0 ? 1 : cpct * 2, new_size));
+            }
+            for (size_type i = curr_idx; i < new_size; ++i) {
+                allocator_traits<Allocator>::construct(alloc, vector + i);
+            }
+        }
+
+        curr_idx = new_size;
+    }
+
+    // Pakeičia vektoriaus dydį.
+    // Jei naujas dydis didesnis, nauji elementai yra pridedami ir inicializuojami duota reikšme (value).
+    void resize(size_type new_size, const value_type& value) {
+        if (new_size < curr_idx) {
+            destroy_range(vector + new_size, vector + curr_idx);
+        } else if (new_size > curr_idx) {
+            if (new_size > cpct) {
+                reserve(max(cpct == 0 ? 1 : cpct * 2, new_size));
+            }
+            for (size_type i = curr_idx; i < new_size; ++i) {
+                allocator_traits<Allocator>::construct(alloc, vector + i, value);
+            }
+        }
+        curr_idx = new_size;
+    }
+
+
 
 
 
