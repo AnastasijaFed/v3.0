@@ -423,6 +423,21 @@ iterator emplace(const_iterator pos, Args&&... args) {
       ++curr_idx;
     }
 
+    //įterpia objektą į vektoriaus pabaigą iš karto naudojant konstruktorių
+    template <typename... Args>
+void emplace_back(Args&&... args) {
+
+    if (curr_idx == cpct) {
+        reserve(cpct == 0 ? 1 : cpct * 2);
+    }
+
+    std::allocator_traits<Allocator>::construct(alloc, vector + curr_idx, forward<Args>(args)...);
+
+    ++curr_idx;
+}
+
+
+
 
 
 
