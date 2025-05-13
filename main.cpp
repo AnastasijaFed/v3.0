@@ -431,7 +431,7 @@ int main() {
             StudentClass student5("Vardenis", "Pavardenis", {6, 7, 8}, 10, 0);
             student5.calculateFinalGradesAverageClass(student5);
             cout << "Student5: " <<student5<<endl;
-            StudentClass student6 = move(student5);
+            StudentClass student6 = std::move(student5);
             cout << "Student6 su move: " <<student6<<endl;
             cout<<endl;
             if (student5.getName().empty() && student5.getSurname().empty() && student5.getGrades().empty()) {
@@ -450,7 +450,7 @@ int main() {
             student8.calculateFinalGradesAverageClass(student8);
             cout << "Student8 be move: " <<student8<<endl;
             cout<<endl;
-            student8 = move(student7);
+            student8 = std::move(student7);
             cout << "Student8 su move: " <<student8<<endl;
 
             if (student7.getName().empty() && student7.getSurname().empty() && student7.getGrades().empty()) {

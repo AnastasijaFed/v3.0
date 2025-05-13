@@ -87,8 +87,8 @@ using namespace std;
       }
       //move konstruktorius
       StudentClass(StudentClass&& student) noexcept
-        : Human(move(student)),
-          grades(move(student.grades)),
+        : Human(std::move(student)),
+          grades(std::move(student.grades)),
           exam_grade(student.exam_grade),
           final_grade(student.final_grade) {
         student.exam_grade = 0.0;
@@ -101,8 +101,8 @@ using namespace std;
       //move assignment operatorius
       StudentClass& operator=(StudentClass&& student) noexcept {
         if (this == &student) return *this;
-        Human::operator=(move(student));
-        grades = move(student.grades);
+        Human::operator=(std::move(student));
+        grades = std::move(student.grades);
         exam_grade = student.exam_grade;
         final_grade = student.final_grade;
         student.exam_grade = 0;

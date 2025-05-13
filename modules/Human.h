@@ -20,7 +20,7 @@ public:
 
     virtual void printInfo() = 0;
 
-    Human(Human&& student) noexcept : name(move(student.name)), surname(move(student.surname)) {}
+    Human(Human&& student) noexcept : name(std::move(student.name)), surname(std::move(student.surname)) {}
 
     Human& operator=(Human&& other) noexcept {
         if (this == &other) return *this;
