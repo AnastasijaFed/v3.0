@@ -334,7 +334,49 @@ void insert_range(T* pos, InputIt first, InputIt last) {
 
       curr_idx += count;
     }
-   //TO-DO emplace
+
+//įterpia elementą į tam tikrą poziciją tiesiogiai iškviesdamas konstruktorių
+   template<typename... Args>
+iterator emplace(const_iterator pos, Args&&... args) {
+    size_t index = pos - vector;
+
+    if (curr_idx >= cpct) {
+        size_t new_capacity = (cpct == 0) ? 1 : cpct * 2;
+        T* new_data = alloc.allocate(new_capacity);
+
+
+        for (size_t i = 0; i < index; ++i) {
+            allocator_traits<Allocator>::construct(alloc, new_data + i, std::move_if_noexcept(vector[i]));
+            allocator_traits<Allocator>::destroy(alloc, vector + i);
+        }
+
+        // 2. Construct the new element in-place with forwarded arguments
+        std::allocator_traits<Allocator>::construct(alloc, new_data + index, std::forward<Args>(args)...);
+
+        // 3. Move elements after insertion point
+        for (size_t i = index; i < curr_idx; ++i) {
+            std::allocator_traits<Allocator>::construct(alloc, new_data + i + 1, std::move_if_noexcept(vector[i]));
+            std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+        }
+
+        if (vector) alloc.deallocate(vector, cpct);
+        vector = new_data;
+        cpct = new_capacity;
+    } else {
+        // Shift elements right to make space
+        for (size_t i = curr_idx; i > index; --i) {
+            std::allocator_traits<Allocator>::construct(alloc, vector + i, std::move_if_noexcept(vector[i - 1]));
+            std::allocator_traits<Allocator>::destroy(alloc, vector + i - 1);
+        }
+
+        // Naudojam forward, kad išsaugotumem value category (pvz. move paverčia arg į rvalue
+       allocator_traits<Allocator>::construct(alloc, vector + index, forward<Args>(args)...);
+    }
+
+    ++curr_idx;
+    return vector + index;
+}
+
 
   //ištrina elementą nurodytoje pozicijoje
   T* erase(T* pos) {
@@ -350,6 +392,7 @@ void insert_range(T* pos, InputIt first, InputIt last) {
       --curr_idx;
       return vector + index;
     }
+
   //ištrina elementus nurodytoje atkarpoje
   T* erase(T* first, T* last) {
       size_t start = first - vector;
