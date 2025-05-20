@@ -3,7 +3,7 @@
 #include "modules/StudentDeque.h"
 #include "modules/StudentClass.h"
 #include "modules/Human.h"
-#include "modules/Vector.h"
+
 using namespace std;
 
 
@@ -11,8 +11,8 @@ using namespace std;
 
 int main() {
     vector<Student> students;
-    vector<StudentClass> studentsClass;
-    vector<StudentClass> studentsClass2;
+    Vector<StudentClass> studentsClass;
+    Vector<StudentClass> studentsClass2;
     StudentClass studentClass;
     vector<Student> students2;
     int menu_choice, struct_choice;
@@ -89,86 +89,8 @@ int main() {
         }
         case 4:
         {
-            /*studentsClass2 = studentClass.readStudentsFileClass(std::string("/Users/anastasijafedorenko/Desktop/OOP1.1/cmake-build-debug/kursiokai.txt"));
-            for (auto& student : studentsClass2) {
-                studentsClass.push_back(student);
-            }
-            if (!studentsClass.empty()) {
-               studentClass.printStudentListClass(studentsClass);*/
-            Vector<StudentClass> vec;
+            studentsClass2 = StudentClass::readStudentsFileClass("students1000.txt");
 
-    // Test push_back
-    vec.push_back(StudentClass("Alice", "Smith", {9, 8, 10}, 9, 9.2));
-    vec.push_back(StudentClass("Bob", "Brown", {7, 6, 10}, 8, 8.3));
-    vec.push_back(StudentClass("Charlie", "Johnson", {8, 7, 9}, 9, 8.5));
-
-    std::cout << "After push_back:\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
-
-    // Test size and capacity
-    std::cout << "Size: " << vec.size() << "\n";
-    std::cout << "Capacity: " << vec.capacity() << "\n";
-
-    // Test at
-    try {
-        std::cout << "Student at index 1: " << vec.at(1) << std::endl;
-    } catch (const std::out_of_range& e) {
-        std::cout << e.what() << std::endl;
-    }
-
-    // Test front and back
-    try {
-        std::cout << "First student: " << vec.front() << std::endl;
-        std::cout << "Last student: " << vec.back() << std::endl;
-    } catch (const std::out_of_range& e) {
-        std::cout << e.what() << std::endl;
-    }
-
-    // Test insert at specific position
-    auto it = vec.insert(vec.begin() + 1, StudentClass("David", "Williams", {8, 9, 7}, 9, 8.8));
-    std::cout << "After insert at index 1:\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
-
-    // Test insert_range
-    std::vector<StudentClass> more_students = {
-        StudentClass("Eve", "Davis", {8, 9, 8}, 9, 8.7),
-        StudentClass("Frank", "Miller", {9, 8, 7}, 8, 8.1)
-    };
-
-    vec.insert_range(vec.begin() + 2, more_students.begin(), more_students.end());
-    std::cout << "After insert_range at index 2:\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
-
-    // Test erase single element
-    vec.erase(vec.begin() + 3);
-    std::cout << "After erase at index 3:\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
-
-    // Test erase range of elements
-    vec.erase(vec.begin() + 1, vec.begin() + 3);
-    std::cout << "After erase range (index 1 to 3):\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
-
-    // Test clear
-    vec.clear();
-    std::cout << "After clear, is empty: " << (vec.empty() ? "Yes" : "No") << std::endl;
-
-    // Test assign (reassign values)
-    vec.assign(3, StudentClass("Test", "User", {9, 10, 9}, 10, 9.5));
-    std::cout << "After assign(3, StudentClass):\n";
-    for (const auto& student : vec) {
-        std::cout << student << std::endl;
-    }
 
 
             break;
@@ -410,7 +332,8 @@ int main() {
 
             cout << "Copy constructor testas:  "<<endl;
             cout << "-----------------------------------------------------------"<<endl;
-           StudentClass student1("Anastasija", "Fedorenko", {9, 8, 10}, 10, 9.6);
+            Vector<double> v1 = {9, 8, 10};
+           StudentClass student1("Anastasija", "Fedorenko", v1 , 10, 9.6);
             cout << "Student1: " <<student1<<endl;
             StudentClass student2 = student1;
             cout << "Student2: " <<student2<<endl;

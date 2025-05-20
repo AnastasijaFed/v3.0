@@ -22,6 +22,15 @@ public:
 
     Human(Human&& student) noexcept : name(std::move(student.name)), surname(std::move(student.surname)) {}
 
+    Human(const Human& other) : name(other.name), surname(other.surname) {}
+
+
+    Human& operator=(const Human& other) {
+        if (this == &other) return *this;
+        name = other.name;
+        surname = other.surname;
+        return *this;
+    }
     Human& operator=(Human&& other) noexcept {
         if (this == &other) return *this;
         name = std::move(other.name);

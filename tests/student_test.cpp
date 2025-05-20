@@ -35,8 +35,8 @@ TEST(SortingTest, SortByAverage) {
     b.setExamGrades(5);
     b. StudentClass::calculateFinalGradesAverageClass(b);
 
-    vector<StudentClass> list = {a, b};
-    vector<StudentClass> sorted = a.sortByAverageClass(list);
+    Vector<StudentClass> list = {a, b};
+    Vector<StudentClass> sorted = a.sortByAverageClass(list);
     EXPECT_EQ(sorted[0].getFinalGrade(), b.getFinalGrade());
 }
 

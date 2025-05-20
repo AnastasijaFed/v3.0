@@ -5,7 +5,7 @@
 #ifndef STUDENTCLASS_H
 #define STUDENTCLASS_H
 #include <string>
-#include <vector>
+#include "Vector.h"
 #include <iostream>
 #include <numeric>
 #include <iomanip>
@@ -20,36 +20,36 @@ using namespace std;
 
 
 
-            const vector<double> getGrades()const{return grades;}
+            Vector<double> getGrades()const {return grades;}
             const double getExamGrades()const{return exam_grade;}
             const void setExamGrades(const double grade){this->exam_grade = grade;}
-            const void setGrades(const vector<double> grades){this->grades = grades;}
+            const void setGrades(const Vector<double> grades){this->grades = grades;}
             void clearGrades(){this->grades.clear();}
             const void setFinalGrade(const double finalGrade){this->final_grade = finalGrade;}
             const double getFinalGrade()const{return final_grade;}
-            vector<StudentClass> addStudentsObjects(vector<StudentClass> students);
-            double averageClass(StudentClass &student);
+             Vector<StudentClass> addStudentsObjects(::Vector<StudentClass> students);
+            static double averageClass(const StudentClass &student);
             double medianClass(StudentClass &student);
           double calculateFinalGradesMedianClass(StudentClass &student);
             void calculateFinalGradesAverageClass(StudentClass &student);
-          void printStudentListClass(vector<StudentClass> &students);
-            void generateGradesClass(vector<StudentClass> &students);
-        vector<string> loadFromFileClass(const string &filename);
-      void writeStudentsToFile(const vector<StudentClass>& students, const string& filename);
-          vector<StudentClass> readStudentsFileClass(const string &filename);
-        vector<StudentClass> generateRandomStudentsClass(int count);
-          vector<StudentClass> testClass();
-        static bool compareByNameClass(StudentClass a, StudentClass b);
-        static bool compareBySurnameClass(StudentClass a, StudentClass b);
-        bool compareByAverageClass(StudentClass a, StudentClass b);
-        vector<StudentClass> sortByNameClass(vector<StudentClass> students);
-        vector<StudentClass> sortBySurnameClass(vector<StudentClass> students);
-        vector<StudentClass> sortByAverageClass(vector<StudentClass> students);
+          void printStudentListClass(Vector<StudentClass> &students);
+            void generateGradesClass(Vector<StudentClass> &students);
+        Vector<string> loadFromFileClass(const string &filename);
+      void writeStudentsToFile(const Vector<StudentClass>& students, const string& filename);
+          static Vector<StudentClass> readStudentsFileClass(const string &filename);
+        Vector<StudentClass> generateRandomStudentsClass(int count);
+          Vector<StudentClass> testClass();
+        bool compareByNameClass(const StudentClass& a, const StudentClass& b);
+        bool compareBySurnameClass(const StudentClass& a, const StudentClass& b);
+        bool compareByAverageClass(const StudentClass& a, const StudentClass& b);
+        Vector<StudentClass> sortByNameClass(Vector<StudentClass>& students);
+        Vector<StudentClass> sortBySurnameClass(Vector<StudentClass>& students);
+        Vector<StudentClass> sortByAverageClass(Vector<StudentClass>& students);
         void logDuration(const string& message, const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& stop);
         void generateStudentsFileClass(int numberOfStudents);
-        void sortStudentsInFileClass(vector<StudentClass>& students,int numberOfStudents);
-        void strategyTwoVectorClass(vector<StudentClass>& students, vector<StudentClass>& vargsiukai, int num);
-        void strategyThreeVector(vector<StudentClass>& students, vector<StudentClass>& vargsiukai, int num);
+        void sortStudentsInFileClass(Vector<StudentClass>& students,int numberOfStudents);
+        void strategyTwoVectorClass(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
+        void strategyThreeVector(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
 
 
 
@@ -62,7 +62,7 @@ using namespace std;
       }
 
             //konstruktorius
-      StudentClass(string name, string surname, vector<double> grades, double exam_grade, double finalGrade)
+      StudentClass(string name, string surname, Vector<double> grades, double exam_grade, double finalGrade)
           : Human(name, surname),
             grades(grades),
             exam_grade(exam_grade),
@@ -135,7 +135,7 @@ using namespace std;
             student.setSurname(surnamePart);
 
             // Read grades
-            vector<double> grades;
+            Vector<double> grades;
             double grade;
             while (iss >> grade) {
               grades.push_back(grade);
@@ -161,9 +161,7 @@ using namespace std;
 
 
        private:
-        string name;
-        string surname;
-        ::vector<double> grades;
+       Vector<double> grades;
         double exam_grade;
         mutable double final_grade;
     };
