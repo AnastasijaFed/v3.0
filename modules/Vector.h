@@ -45,12 +45,8 @@ public:
   //MEMBER FUNCTIONS
 
   //default konstruktorius
-    Vector(){
-        vector = nullptr;
-        cpct = 0;
-        curr_idx = 0;
-        alloc = Allocator();
-      }
+    Vector() : vector(nullptr), cpct(0), curr_idx(0) {}
+
   //konstruktorius
     Vector(size_t count, const T& value){
       vector = alloc.allocate(count);
@@ -69,14 +65,15 @@ public:
         std::uninitialized_copy(init_list.begin(), init_list.end(), vector);
     }
   //destruktorius
-    ~Vector(){
-      for (size_t i = 0; i < curr_idx; ++i) {
-        destroy_at(vector + i);
-      }
-      if (vector) {
+   ~Vector() {
+    for (size_t i = 0; i < curr_idx; ++i) {
+        std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+    }
+    if (vector) {
         alloc.deallocate(vector, cpct);
-      }
-      }
+    }
+}
+
       //copy konstruktorius
     Vector(const Vector& other)
     : cpct(other.cpct),
@@ -108,29 +105,36 @@ Vector& operator=(const Vector& other) {
     }
     return *this;
 }
+Vector(Vector&& other) noexcept
+    : vector(other.vector), cpct(other.cpct), curr_idx(other.curr_idx), alloc(std::move(other.alloc)) {
+    other.vector = nullptr;
+    other.cpct = 0;
+    other.curr_idx = 0;
+}
 
 
 
 
   //move assignment operator
  Vector& operator=(Vector&& other) noexcept {
-    if (this != &other) {  // Check for self-assignment
-        // Step 1: Release any resources held by the current object (i.e., destroy objects and deallocate memory)
-        if (vector) {
-            alloc.deallocate(vector, cpct);  // Deallocate the current vector's memory
+    if (this != &other) {
+        for (size_t i = 0; i < curr_idx; ++i) {
+            allocator_traits<Allocator>::destroy(alloc, vector + i);
         }
 
-        // Step 2: Move the resources from the other object
+        if (vector) {
+            alloc.deallocate(vector, cpct);
+        }
+
         vector = other.vector;
         cpct = other.cpct;
         curr_idx = other.curr_idx;
 
-        // Step 3: Reset the state of the other object
         other.vector = nullptr;
         other.cpct = 0;
         other.curr_idx = 0;
     }
-    return *this;  // Return *this to allow chaining
+    return *this;
 }
 
   //pakeičia dabartines vektoriaus reikšmes į kopijas reikšmių value count kartų
@@ -217,9 +221,13 @@ void assign_range(InputIt first, InputIt last) {
 
   //Iteratoriai
 
-  iterator begin() noexcept { return vector; }
+T* begin() { return (vector != nullptr) ? vector : nullptr; }
+T* end() { return (vector != nullptr) ? vector + curr_idx : nullptr; }
+
+const T* begin() const { return (vector != nullptr) ? vector : nullptr; }
+const T* end() const { return (vector != nullptr) ? vector + curr_idx : nullptr; }
+
   const_iterator cbegin() const noexcept { return vector; }
-  iterator end() noexcept { return vector + curr_idx; }
   const_iterator cend() const noexcept { return vector + curr_idx; }
 
  //CAPACITY
@@ -238,20 +246,25 @@ void assign_range(InputIt first, InputIt last) {
 
   //padidina vektoriaus capacity
   void reserve(size_t new_cap) {
-      if (new_cap <= cpct) return;
-      T* new_data = alloc.allocate(new_cap);
-      // perkeliam egzistuojančius elementus į rezervuotą atmintį
-      for (size_t i = 0; i < curr_idx; ++i) {
-        allocator_traits<Allocator>::construct(alloc, new_data + i, move_if_noexcept(vector[i]));
-        destroy_at(vector + i);
-      }
+    if (new_cap <= cpct) return;
 
-      if (vector) {
+    T* new_data = alloc.allocate(new_cap);
+
+    // Move existing elements to new allocation
+    for (size_t i = 0; i < curr_idx; ++i) {
+    std::allocator_traits<Allocator>::construct(alloc, new_data + i, vector[i]); // copy instead of move
+    std::allocator_traits<Allocator>::destroy(alloc, vector + i);
+}
+
+
+    if (vector) {
         alloc.deallocate(vector, cpct);
-      }
-      vector = new_data;
-      cpct = new_cap;
     }
+
+    vector = new_data;
+    cpct = new_cap;
+}
+
 
   //grąžina vektoriaus capacity
   size_t capacity() const noexcept {
@@ -279,12 +292,18 @@ void assign_range(InputIt first, InputIt last) {
 //MODIFIERS
 
   //ištrina visus elementus
-  void clear() noexcept {
-      for (size_t i = 0; i < curr_idx; ++i) {
+ void clear() noexcept {
+    for (size_t i = 0; i < curr_idx; ++i) {
         allocator_traits<Allocator>::destroy(alloc, vector + i);
-      }
-      curr_idx = 0;
     }
+    if (vector) {
+        alloc.deallocate(vector, cpct);
+        vector = nullptr;
+        cpct = 0;
+    }
+    curr_idx = 0;
+}
+
 
   //įterpia elementą į nurodytą poziciją
   iterator insert(const_iterator pos, const T& value) {
@@ -426,29 +445,33 @@ iterator emplace(const_iterator pos, Args&&... args) {
 
   //ištrina elementus nurodytoje atkarpoje
   T* erase(T* first, T* last) {
-      size_t start = first - vector;
-      size_t end = last - vector;
-      size_t count = end - start;
+    size_t start = first - vector;
+    size_t end = last - vector;
+    size_t count = end - start;
 
-
-
-
-      for (size_t i = end; i < curr_idx; ++i) {
-        allocator_traits<Allocator>::construct(alloc, vector + i - count, move_if_noexcept(vector[i]));
-        allocator_traits<Allocator>::destroy(alloc, vector + i);
-      }
-
-      curr_idx -=  count;
-      return vector + start;
+    // Move tail elements forward
+    for (size_t i = end; i < curr_idx; ++i) {
+        vector[i - count] = std::move(vector[i]);
     }
+
+    // Destroy the now-unused tail elements
+    for (size_t i = curr_idx - count; i < curr_idx; ++i) {
+        allocator_traits<Allocator>::destroy(alloc, vector + i);
+    }
+
+    curr_idx -= count;
+    return vector + start;
+}
 
    //prideda elementą į vektoriaus pabaigą
  void push_back(const T& value) {
+
+
     if (curr_idx >= cpct) {
         size_t new_cpct = (cpct == 0) ? 1 : cpct * 2;
+
         reserve(new_cpct);  // Reserve memory without changing curr_idx
     }
-
     std::allocator_traits<Allocator>::construct(alloc, vector + curr_idx, value);
     ++curr_idx;
 }

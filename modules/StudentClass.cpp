@@ -40,11 +40,27 @@ inline ::ostream& operator<<(::ostream& os, ::Vector<StudentClass>& students) {
 
 
 double StudentClass::averageClass(const StudentClass &student) {
-    if (student.getGrades().empty()) return 0.0;
-    double average = accumulate(student.getGrades().begin(), student.getGrades().end(), 0.0);
-    average /= student.getGrades().size();
+    const auto& grades = student.getGrades();
+
+    if (grades.empty()) {
+        return 0.0;
+    }
+
+    auto b = grades.begin();
+    auto e = grades.end();
+
+    if (!b || !e || b > e) {
+        std::cerr << "[ERROR] averageClass: Invalid vector pointers. begin=" <<b
+                  << ", end=" << e << std::endl;
+        return 0.0;
+    }
+
+    double sum = std::accumulate(b, e, 0.0);
+    double average = sum / grades.size();
+
     return average;
 }
+
 
 double StudentClass::medianClass(StudentClass &student) {
     if (student.getGrades().empty()) {
@@ -138,15 +154,15 @@ Vector<StudentClass> StudentClass::readStudentsFileClass(const string& filename)
       cout << "File opened" << endl;
       }
 
-    StudentClass student;
-    int i = 0;
-    while (file >> student) {
-      i++;
-        std::cout << "Read: " << student.getName() << " " << student.getSurname() << std::endl;
-students.push_back(student);
-std::cout << "Pushed student\n";
-    }
-	cout << "Read " << i << " students" << endl;
+
+
+    while (true) {
+    StudentClass tmp;
+    if (!(file >> tmp)) break;
+    students.push_back(std::move(tmp));
+
+}
+
     file.close();
     return students;
 }
@@ -264,14 +280,9 @@ Vector<StudentClass> StudentClass::sortBySurnameClass(Vector<StudentClass>& stud
 }
 
 Vector<StudentClass> StudentClass::sortByAverageClass(Vector<StudentClass>& students) {
-    // Custom sort function for your Vector class.
-    for (size_t i = 0; i < students.size() - 1; ++i) {
-        for (size_t j = i + 1; j < students.size(); ++j) {
-            if (compareByAverageClass(students[i], students[j])) {
-                std::swap(students[i], students[j]);
-            }
-        }
-    }
+    std::sort(students.begin(), students.end(), [](const StudentClass& a, const StudentClass& b) {
+    return a.getFinalGrade() < b.getFinalGrade();
+});
     return students;
 }
 void StudentClass::logDuration(const string &message, const high_resolution_clock::time_point &start, const high_resolution_clock::time_point &stop) {
@@ -349,6 +360,7 @@ void StudentClass::strategyThreeVector(Vector<StudentClass> &students, Vector<St
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
     Vector<StudentClass>::iterator bound;
     bound = stable_partition(students.begin(), students.end(), [](StudentClass &s) { return s.getFinalGrade() < 5.00; });
+    vargsiukai.reserve(bound - students.begin());
     copy(students.begin(), bound, back_inserter(vargsiukai));
     students.erase(students.begin(), bound);
 

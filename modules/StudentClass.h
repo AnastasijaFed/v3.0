@@ -21,12 +21,12 @@ using namespace std;
 
 
             Vector<double> getGrades()const {return grades;}
-            const double getExamGrades()const{return exam_grade;}
-            const void setExamGrades(const double grade){this->exam_grade = grade;}
-            const void setGrades(const Vector<double> grades){this->grades = grades;}
+            double getExamGrades()const{return exam_grade;}
+            void setExamGrades(const double grade){this->exam_grade = grade;}
+            void setGrades(const Vector<double> grades){this->grades = grades;}
             void clearGrades(){this->grades.clear();}
-            const void setFinalGrade(const double finalGrade){this->final_grade = finalGrade;}
-            const double getFinalGrade()const{return final_grade;}
+            void setFinalGrade(const double finalGrade){this->final_grade = finalGrade;}
+            double getFinalGrade()const{return final_grade;}
              Vector<StudentClass> addStudentsObjects(::Vector<StudentClass> students);
             static double averageClass(const StudentClass &student);
             double medianClass(StudentClass &student);
@@ -61,54 +61,61 @@ using namespace std;
                << ", Gal. pazymys: " << fixed << setprecision(2) << getFinalGrade() << endl;
       }
 
-            //konstruktorius
-      StudentClass(string name, string surname, Vector<double> grades, double exam_grade, double finalGrade)
-          : Human(name, surname),
-            grades(grades),
-            exam_grade(exam_grade),
-            final_grade(finalGrade) {}
 
+    // Constructor
+    StudentClass(std::string name, std::string surname, Vector<double> grades,
+                 double exam_grade, double finalGrade)
+        : Human(std::move(name), std::move(surname)),
+          grades(std::move(grades)),
+          exam_grade(exam_grade),
+          final_grade(finalGrade) {}
 
-          //copy konstruktorius
-      StudentClass(const StudentClass &student)
-    : Human(student.getName(), student.getSurname()),
-      grades(student.grades),
-      exam_grade(student.exam_grade),
-      final_grade(student.final_grade) {}
-  //copy asignment operator
-      StudentClass& operator=(const StudentClass &student) {
-        if (this == &student) return *this;
-        Human::setName(student.getName());
-        Human::setSurname(student.getSurname());
-        grades = student.grades;
-        exam_grade = student.exam_grade;
-        final_grade = student.final_grade;
+    // Copy constructor
+    StudentClass(const StudentClass& other)
+        : Human(other.getName(), other.getSurname()),
+          grades(other.grades),
+          exam_grade(other.exam_grade),
+          final_grade(other.final_grade) {
+
+          }
+
+    // Copy assignment
+    StudentClass& operator=(const StudentClass& other) {
+        if (this != &other) {
+            setName(other.getName());
+            setSurname(other.getSurname());
+            grades = other.grades;
+            exam_grade = other.exam_grade;
+            final_grade = other.final_grade;
+        }
         return *this;
-      }
-      //move konstruktorius
-      StudentClass(StudentClass&& student) noexcept
-        : Human(std::move(student)),
-          grades(std::move(student.grades)),
-          exam_grade(student.exam_grade),
-          final_grade(student.final_grade) {
-        student.exam_grade = 0.0;
-        student.final_grade = 0.0;
-        student.grades.clear();
-        student.name.clear();
-        student.surname.clear();
-      }
+    }
 
-      //move assignment operatorius
-      StudentClass& operator=(StudentClass&& student) noexcept {
-        if (this == &student) return *this;
+    // Move constructor
+ StudentClass(StudentClass&& student) noexcept
+    : Human(std::move(student.name), std::move(student.surname)),
+      grades(std::move(student.grades)),
+      exam_grade(student.exam_grade),
+      final_grade(student.final_grade) {
+    student.exam_grade = 0.0;
+    student.final_grade = 0.0;
+}
+
+    // Move assignment
+    StudentClass& operator=(StudentClass&& student) noexcept {
+    if (this != &student) {
         Human::operator=(std::move(student));
         grades = std::move(student.grades);
         exam_grade = student.exam_grade;
         final_grade = student.final_grade;
+
         student.exam_grade = 0;
         student.final_grade = 0;
-        return *this;
-      }
+        // NO clearing name/surname
+    }
+    return *this;
+}
+
 
       friend ostream& operator<<(ostream& os, const StudentClass& student) {
 
@@ -151,13 +158,9 @@ using namespace std;
             return is;
           }
       ~StudentClass() {
-            name.clear();
-            surname.clear();
-            grades.clear();
-            exam_grade = 0;
-            final_grade = 0;
-
-          }
+    exam_grade = 0;
+    final_grade = 0;
+}
 
 
        private:

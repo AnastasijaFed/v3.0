@@ -185,10 +185,6 @@ int main() {
             studentsClass2.clear();
             studentClass.sortStudentsInFileClass(studentsClass2, 1000000);
             studentsClass2.clear();
-            cout<<"Strukturos"<<endl;
-            sortStudentsInFile(students,100000);
-            students.clear();
-            sortStudentsInFile(students,1000000);
             break;
         }
             case 8:
