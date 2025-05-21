@@ -31,35 +31,37 @@ Taip pat buvo atliktas tyrimas su StudentClass objektais atliekant įvairias fun
 
 | Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
 |-----------------------------------|----------------------|----------------------|
-| Nuskaitymas iš failo              | 0.574                | 0.000512 sec         |
-| Įrašų rūšiavimas                  | 0.101                | 0.00362867 sec       |
-| Įrašų dalijimas į du konteinerius | 0.016758             | 0.0194655 sec        |
-| Kietekų rašymas į failą           | 0.129                | 0.221459 sec         |
-| Vargšiukų rašymas į failą         | 0.183                | 1.9494 sec           |
-| Visas programos veikimo laikas    | 1.013                | 1.9494 sec           |
+| Nuskaitymas iš failo              | 0.574                | 0.709 	              |
+| Įrašų rūšiavimas                  | 0.101                | 0.169                |
+| Įrašų dalijimas į du konteinerius | 0.016758             | 0.05682266           |
+| Kietekų rašymas į failą           | 0.129                | 0.039                |
+| Vargšiukų rašymas į failą         | 0.183                | 0.028                |
+| Visas programos veikimo laikas    | 1.013                | 1.022                |
 
 
 1000000 įrašų:
 
 | Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
 |-----------------------------------|----------------------|----------------------|
-| Nuskaitymas iš failo              | 5.693                | 0.000512 sec         |
-| Įrašų rūšiavimas                  | 1.175                | 0.00362867 sec       |
-| Įrašų dalijimas į du konteinerius | 0.160981333          | 0.0194655 sec        |
-| Kietekų rašymas į failą           | 1.309                | 0.221459 sec         |
-| Vargšiukų rašymas į failą         | 1.852                | 1.9494 sec           |
-| Visas programos veikimo laikas    | 10.291               | 1.9494 sec           |
+| Nuskaitymas iš failo              | 5.693                | 7.122                |
+| Įrašų rūšiavimas                  | 1.175                | 1.718                |
+| Įrašų dalijimas į du konteinerius | 0.160981333          | 0.5797827            |
+| Kietekų rašymas į failą           | 1.309                | 0.391                |
+| Vargšiukų rašymas į failą         | 1.852                | 0.284                |
+| Visas programos veikimo laikas    | 10.291               | 10.333               |
 
 10000000 įrašų:
 
 | Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
 |-----------------------------------|----------------------|----------------------|
-| Nuskaitymas iš failo              | 62.813               | 0.000512 sec         |
-| Įrašų rūšiavimas                  | 13.445               | 0.00362867 sec       |
-| Įrašų dalijimas į du konteinerius | 1.962076584          | 0.0194655 sec        |
-| Kietekų rašymas į failą           | 18.94                | 0.221459 sec         |
-| Vargšiukų rašymas į failą         | 13.758               | 1.9494 sec           |
-| Visas programos veikimo laikas    | 111.931076           | 1.9494 sec           |
+| Nuskaitymas iš failo              | 62.813               | 74.948               |
+| Įrašų rūšiavimas                  | 13.445               | 20.951               |
+| Įrašų dalijimas į du konteinerius | 1.962076584          | 5.856096167          |
+| Kietekų rašymas į failą           | 18.94                | 4.161                |
+| Vargšiukų rašymas į failą         | 13.758               | 3.156                |
+| Visas programos veikimo laikas    | 111.931076           | 111.979              |
+
+
 
 
 
