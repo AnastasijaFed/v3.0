@@ -32,7 +32,7 @@ int main() {
         cout << "1 - Įvesti studentų duomenis ranka\n";
         cout << "2 - Generuoti pažymius\n";
         cout << "3 - Generuoti studentų vardus, pavardes ir pažymius\n";
-        cout << "4 - `vector\n";
+        cout << "4 - Vector VS std::vector\n";
         cout << "5 - Rūšiuoti\n";
         cout << "6 - Sukurti failus\n";
         cout << "7 - Testas tik su vektoriais\n";
@@ -89,9 +89,41 @@ int main() {
         }
         case 4:
         {
-            studentsClass2 = StudentClass::readStudentsFileClass("students1000.txt");
+          unsigned int sz = 100000000; // 100000, 1000000, 10000000, 100000000
+
+		 auto start_std = std::chrono::high_resolution_clock::now();
+         int realloc = 0;
+
+    	std::vector<int> v1;
+    	for (int i = 1; i <= sz; ++i) {
+          if(v1.size() == v1.capacity()) {
+            realloc++;
+          }
+          v1.push_back(i);
+          }
+
+    	auto end_std = std::chrono::high_resolution_clock::now();
+    	std::chrono::duration<double> duration_std = end_std - start_std;
+    	cout << "std::vector laikas: " << duration_std.count() << " sec\n";
+        cout<<"Realloc std::vector: "<<realloc<<endl;
+
+        realloc = 0;
 
 
+    	auto start_custom = std::chrono::high_resolution_clock::now();
+
+    	Vector<int> v2;
+    	for (int i = 1; i <= sz; ++i){
+          if(v2.size() == v2.capacity()) {
+            realloc++;
+          }
+          v2.push_back(i);
+          }
+          cout<<"Realloc mano Vector: "<<realloc<<endl;
+
+    	auto end_custom = std::chrono::high_resolution_clock::now();
+    	std::chrono::duration<double> duration_custom = end_custom - start_custom;
+    	std::cout << "mano Vector laikas: " << duration_custom.count() << " sec\n";
 
             break;
         }

@@ -548,6 +548,7 @@ void emplace_back(Args&&... args) {
         curr_idx = new_size;
     }
     void swap(Vector& other) noexcept {
+      using std::swap;
     	swap(vector, other.vector);
     	swap(cpct, other.cpct);
     	swap(curr_idx, other.curr_idx);
@@ -600,5 +601,7 @@ std::ostream& operator<<(std::ostream& os, const Vector<T>& vec) {
     }
     return os;
 }
+
+
 
 #endif

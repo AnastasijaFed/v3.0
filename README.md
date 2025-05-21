@@ -10,8 +10,20 @@ funkcijų atitinkančių std::vector funkcijas. Pateikta ataskaita 5 pagrindini�
 | void clear()                   | Pašalina visus elementus iš vektoriaus            | v.clear();                                                                                                                       |
 | T& at(size_t index)            | Grąžina elementą index pozicijoje tikrinant ribas | try { <br> int value = v.at(5);<br> catch (const std::out_of_range& e) { <br>std::cerr << "Tokio indekso nėra" << std::endl;<br>} |
 
+Kad galėtume įvertinti sukurtos klasės efektyvumą, palyginsime ją su std::vector. Lyginsime laiką pildant skirtingą kiekį int elementų naudojant push_back(). Tyrimų vidurkiai pateikti lentelėje:
 
+| Elementų skaičius | Vidurkis std::vector | Vidurkis std::vector |
+|-------------------|----------------------|----------------------|
+| 10000             | 0.00106633 sec       | 0.000512 sec         |
+| 100000            | 0.00467138 sec       | 0.00362867 sec       |
+| 1000000           | 0.0385657 sec        | 0.0194655 sec        |
+| 10000000          | 0.259038 sec         | 0.221459 sec         |
+| 10000000          | 2.4901 sec           | 1.9494 sec           |
 
+Iš šio tyrimo galima matyti, kad sukurta Vector klasė yra spartesnė nei std::vector konteineris, jei naudojame push_back() funkciją užpildyti konteinerį int elementais.
+
+Taip pat buvo atliktas tyrimas užpildant vektorių 100000000 int elementų, kurio tikslas buvo patikrinti kiek kartu vyksta atminties perskirstymai. Tyrimo rezultatas parodė, kad
+<strong>tiek std::vector, tiek Vector atliko atminties perskirstymus 28 kartus</strong>.
 v2.0
 
 Šioje versijoje buvo atlikti Unit Test'ai naudojant Google Test framework'ą. Buvo patikrinta tiek pagrindinė programos logika, tiek "Rule of Five" metodai. Apačioje pateikta išsami kiekvieno testo dokumentacija:

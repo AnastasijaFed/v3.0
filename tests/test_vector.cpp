@@ -138,3 +138,64 @@ TEST(VectorTest, IteratorFunctionality) {
     }
     EXPECT_EQ(sum, 60);
 }
+TEST(VectorTest, FrontAndBack) {
+    Vector<int> vec = {5, 10, 15};
+    EXPECT_EQ(vec.front(), 5);
+    EXPECT_EQ(vec.back(), 15);
+}
+
+TEST(VectorTest, CapacityGrowsOnPushBack) {
+    Vector<int> vec;
+    size_t initial_capacity = vec.capacity();
+    for (int i = 0; i < 100; ++i) {
+        vec.push_back(i);
+    }
+    EXPECT_GE(vec.capacity(), vec.size());
+    EXPECT_GT(vec.capacity(), initial_capacity);
+}
+
+TEST(VectorTest, ReserveIncreasesCapacity) {
+    Vector<int> vec;
+    vec.reserve(50);
+    EXPECT_GE(vec.capacity(), 50);
+}
+
+TEST(VectorTest, ShrinkToFitReducesCapacity) {
+    Vector<int> vec;
+    vec.reserve(100);
+    vec.push_back(1);
+    vec.push_back(2);
+    vec.shrink_to_fit();
+    EXPECT_EQ(vec.capacity(), vec.size());
+}
+
+TEST(VectorTest, EqualityOperator) {
+    Vector<int> vec1 = {1, 2, 3};
+    Vector<int> vec2 = {1, 2, 3};
+    EXPECT_TRUE(vec1 == vec2);
+}
+
+TEST(VectorTest, InequalityOperator) {
+    Vector<int> vec1 = {1, 2, 3};
+    Vector<int> vec2 = {1, 2, 4};
+    EXPECT_TRUE(vec1 != vec2);
+}
+
+TEST(VectorTest, SwapFunctionality) {
+    Vector<int> vec1 = {1, 2};
+    Vector<int> vec2 = {3, 4, 5};
+    vec1.swap(vec2);
+    EXPECT_EQ(vec1.size(), 3);
+    EXPECT_EQ(vec2.size(), 2);
+    EXPECT_EQ(vec1[0], 3);
+    EXPECT_EQ(vec2[0], 1);
+}
+
+TEST(VectorTest, RangeBasedForLoop) {
+    Vector<int> vec = {1, 2, 3};
+    int sum = 0;
+    for (int value : vec) {
+        sum += value;
+    }
+    EXPECT_EQ(sum, 6);
+}
