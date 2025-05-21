@@ -19,7 +19,6 @@ using namespace std;
         public:
 
 
-
             Vector<double> getGrades()const {return grades;}
             double getExamGrades()const{return exam_grade;}
             void setExamGrades(const double grade){this->exam_grade = grade;}
@@ -39,9 +38,9 @@ using namespace std;
           static Vector<StudentClass> readStudentsFileClass(const string &filename);
         Vector<StudentClass> generateRandomStudentsClass(int count);
           Vector<StudentClass> testClass();
-        bool compareByNameClass(const StudentClass& a, const StudentClass& b);
-        bool compareBySurnameClass(const StudentClass& a, const StudentClass& b);
-        bool compareByAverageClass(const StudentClass& a, const StudentClass& b);
+        static bool compareByNameClass(const StudentClass& a, const StudentClass& b);
+        static bool compareBySurnameClass(const StudentClass& a, const StudentClass& b);
+        static bool compareByAverageClass(const StudentClass& a, const StudentClass& b);
         Vector<StudentClass> sortByNameClass(Vector<StudentClass>& students);
         Vector<StudentClass> sortBySurnameClass(Vector<StudentClass>& students);
         Vector<StudentClass> sortByAverageClass(Vector<StudentClass>& students);
@@ -56,7 +55,7 @@ using namespace std;
           //default konstruktorius
       StudentClass() : Human(), grades{}, exam_grade(0), final_grade(0) {}
 
-      void printInfo() override {
+      void printInfo() const override {
           cout << "Vardas: " << getName() << ", Pavarde: " << getSurname()
                << ", Gal. pazymys: " << fixed << setprecision(2) << getFinalGrade() << endl;
       }
@@ -104,7 +103,7 @@ using namespace std;
     // Move assignment
     StudentClass& operator=(StudentClass&& student) noexcept {
     if (this != &student) {
-        Human::operator=(std::move(student));
+        Human::operator=(static_cast<Human&&>(student));
         grades = std::move(student.grades);
         exam_grade = student.exam_grade;
         final_grade = student.final_grade;

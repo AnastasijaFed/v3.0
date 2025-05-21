@@ -15,3 +15,7 @@ target_link_libraries(student_rule_of_five_tests PRIVATE studentlib gtest gtest_
 
 # Register the test with CTest (this runs the tests in student_rule_of_five_tests)
 add_test(NAME StudentRuleOfFiveTests COMMAND student_rule_of_five_tests)
+
+add_executable(vector_test test_vector.cpp)
+target_link_libraries(vector_test PRIVATE studentlib gtest gtest_main)
+add_test(NAME VectorTest COMMAND vector_test)

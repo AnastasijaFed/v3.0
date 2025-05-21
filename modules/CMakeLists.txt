@@ -11,7 +11,6 @@ add_library(studentlib STATIC
         Human.cpp
         Human.h
         Vector.h
-
 )
 
 target_include_directories(studentlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

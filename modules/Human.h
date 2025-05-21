@@ -14,11 +14,18 @@ protected:
     string surname;
 
 public:
-    Human() = default;
+   	const string& getName() const {return name;}
+    const string& getSurname() const {return surname;}
+    void setName(const string& name) { this->name = name; }
+	void setSurname(const string& surname) { this->surname = surname; }
+    Human(){
+      name = "";
+      surname = "";
+      }
     Human(string name, string surname);
     virtual ~Human() =default;
 
-    virtual void printInfo() = 0;
+    virtual void printInfo() const = 0;
 
     Human(Human&& student) noexcept : name(std::move(student.name)), surname(std::move(student.surname)) {}
 
@@ -39,10 +46,7 @@ public:
     }
 
 
-    string getName()const{return name;}
-    string getSurname()const{return surname;}
-    const void setName(const string name){this->name = name;}
-    const void setSurname(const string surname){this->surname = surname;}
+
 };
 
 #endif

@@ -244,11 +244,14 @@ Vector<StudentClass> StudentClass::testClass() {
 }
 
 bool StudentClass::compareByNameClass(const StudentClass& a, const StudentClass& b) {
-    return a.getName() < b.getName();
+   return a.getName() < b.getName();
+
+
 }
 
 bool StudentClass::compareBySurnameClass(const StudentClass& a, const StudentClass& b) {
-    return a.getSurname() < b.getSurname();
+     return a.getSurname() < b.getSurname();
+
 }
 
 bool StudentClass::compareByAverageClass(const StudentClass& a, const StudentClass& b) {

@@ -2,6 +2,9 @@
 // Created by Anastasija Fedorenko on 2025-05-11.
 //
 
+#ifndef OOP_PROJECT_VECTOR_H
+#define OOP_PROJECT_VECTOR_H
+
 #include <cstddef>
 #include <stdexcept>
 #include <utility>
@@ -9,7 +12,6 @@
 #include <initializer_list>
 #include <memory>
 #include <iterator>
-#include "StudentClass.h"
 
 using namespace std;
 
@@ -40,7 +42,14 @@ public:
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-
+  /*
+  friend bool operator==<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+  friend bool operator!=<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+  friend bool operator<<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+  friend bool operator<=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+  friend bool operator>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+  friend bool operator>=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
+*/
 
   //MEMBER FUNCTIONS
 
@@ -485,7 +494,7 @@ void emplace_back(Args&&... args) {
         reserve(cpct == 0 ? 1 : cpct * 2);
     }
 
-   allocator_traits<Allocator>::construct(alloc, vector + curr_idx, forward<Args>(args)...);
+   allocator_traits<Allocator>::construct(alloc, vector + curr_idx, std::forward<Args>(args)...);
 
     ++curr_idx;
 }
@@ -494,7 +503,7 @@ void emplace_back(Args&&... args) {
     void pop_back() {
         if (curr_idx > 0) {
             --curr_idx;
-            destroy_at(vector + curr_idx);
+             std::allocator_traits<Allocator>::destroy(alloc, vector + curr_idx);
         }
     }
     // Pakeičia vektoriaus dydį.
@@ -521,7 +530,13 @@ void emplace_back(Args&&... args) {
     // Jei naujas dydis didesnis, nauji elementai yra pridedami ir inicializuojami duota reikšme (value).
     void resize(size_type new_size, const value_type& value) {
         if (new_size < curr_idx) {
-            destroy_range(vector + new_size, vector + curr_idx);
+            T* start = vector + new_size;
+			T* end = vector + curr_idx;
+
+			for (T* p = start; p != end; ++p) {
+    			p->~T();
+			}
+
         } else if (new_size > curr_idx) {
             if (new_size > cpct) {
                 reserve(max(cpct == 0 ? 1 : cpct * 2, new_size));
@@ -585,3 +600,5 @@ std::ostream& operator<<(std::ostream& os, const Vector<T>& vec) {
     }
     return os;
 }
+
+#endif
