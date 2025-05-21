@@ -23,7 +23,7 @@ Kad galėtume įvertinti sukurtos klasės efektyvumą, palyginsime ją su std::v
 Iš šio tyrimo galima matyti, kad sukurta Vector klasė yra spartesnė nei std::vector konteineris, jei naudojame push_back() funkciją užpildyti konteinerį int elementais.
 
 Taip pat buvo atliktas tyrimas užpildant vektorių 100000000 int elementų, kurio tikslas buvo patikrinti kiek kartu vyksta atminties perskirstymai. Tyrimo rezultatas parodė, kad
-<strong>tiek std::vector, tiek Vector atliko atminties perskirstymus 28 kartus</strong>.
+<strong>tiek std::vector, tiek Vector atliko atminties perskirstymus 28 kartus</strong>. 
 
 Taip pat buvo atliktas tyrimas su StudentClass objektais atliekant įvairias funkcijas aprašytas lentelėje su laikų vidurkiais lyginant std::vector ir Vector:
 
