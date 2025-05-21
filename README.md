@@ -1,3 +1,70 @@
+v3.0
+Šioje versijoje buvo realizuota Vector klasė atitinkanti std::vector konteinerį. Ši klasė realizuoja virš 80%
+funkcijų atitinkančių std::vector funkcijas. Pateikta ataskaita 5 pagrindinių funkcijų:
+
+| Funkcijos pavadinimas          | Paskirtis                                         | Naudojimo pavyzdys                                                                                                               |
+|--------------------------------|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| void push_back(const T& value) | Pridėda reikšmę (value) į vektoriaus galą         | Vector<int> v; v.push_back(10); v.push_back(20);                                                                                 |
+| void pop_back(const T& value)  | Pašalina paskutinį vektoriaus elementą            | v.pop_back(); //pašalina elementą '20'                                                                                           |
+| size_t size() const            | Grąžina elementų skaičių vektoryje                | std::cout << "Dydis: " << v.size() << std::endl;                                                                                 |
+| void clear()                   | Pašalina visus elementus iš vektoriaus            | v.clear();                                                                                                                       |
+| T& at(size_t index)            | Grąžina elementą index pozicijoje tikrinant ribas | try { <br> int value = v.at(5);<br> catch (const std::out_of_range& e) { <br>std::cerr << "Tokio indekso nėra" << std::endl;<br>} |
+
+
+
+v2.0
+
+Šioje versijoje buvo atlikti Unit Test'ai naudojant Google Test framework'ą. Buvo patikrinta tiek pagrindinė programos logika, tiek "Rule of Five" metodai. Apačioje pateikta išsami kiekvieno testo dokumentacija:
+
+Rule of five metodų testai:
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.CopyConstructor|  Užtikrinti, kad kopijavimo konstruktorius teisingai nukopijuoja visus objekto laukus(vardą, pavardę, galutinį pažymį). | Sukurtas `StudentClass` objektas su įvestomis reikšmėmis.| 1. Sukurti objektą `original` su reikšmėmis. 2. Sukurti kitą objektą `copy`, naudojant kopijavimo konstruktorių. 3. Patikrinti, ar visos reikšmės yra vienodos. | Objekto `copy` reikšmės sutampa su `original`. | TAIP|
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.CopyAssignment|  Įsitikinti, kad operatorius `=` teisingai nukopijuoja informaciją iš vieno objekto į kitą, išlaikant duomenų lygybę. | Vienas `StudentClass` objektas su reikšmėmis (`original`), kitas – tuščias (`assigned`).| 1. Sukurti ir užpildyti `original`. 2. Priskirti: `assigned = original`.3. Patikrinti reikšmes. | `assigned` objektas turi tokias pat reikšmes kaip `original`. | TAIP|
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.MoveConstructor|  Įsitikinti, kad perkėlimo konstruktorius perduoda duomenis be kopijavimo ir išvalo pirminį objektą.| Sukurtas objektas `original` su reikšmėmis. |1. Sukurti objektą `moved`, perkeliant `original`. 2. Patikrinti, ar `moved` turi visas reikšmes. 3. Patikrinti, ar `original` yra tuščias. | O`moved` turi visas `original` reikšmes, o `original` yra išvalytas.| TAIP|
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.MoveAssignment|  Įsitikinti, kad `operator= (move)` teisingai perduoda duomenis ir išvalo šaltinį. | Objektas `original` su duomenimis, `moved` – tuščias.|1. Atlikti `moved = std::move(original)`. 2. Patikrinti, ar `moved` perėmė duomenis. 3. Patikrinti, ar `original` išvalytas.| `moved` turi `original` reikšmes; `original` yra tuščias. | TAIP|
+
+
+Pagrindinės programos logikos testai:
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.AverageCalculation| Patikrinti, ar funkcija `averageClass()` grąžina teisingą vidurkį iš pažymių sąrašo.| StudentClass objektas su pažymiais {8, 9, 10}.|Iškviečiama `averageClass()` su studentu.| Tikimasi, kad bus grąžintas vidurkis 9.0. | TAIP|
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| StudentClassTest.FinalGradeFromAverage|Užtikrinti, kad `calculateFinalGradesAverageClass()` apskaičiuoja pažymį pagal formulę: `galutinis = egzaminas * 0.6 + vidurkis * 0.4`.| Studentas su pažymiais {8, 9, 10}, egzaminas 9.|Iškviečiama `calculateFinalGradesAverageClass()`.| Tikimasi, kad galutinis pažymys bus teisingas pagal formulę. | TAIP|
+
+
+| Testo pavadinimas | Tiklas | Sąlygos prieš | Žingsniai | Laukiamas rezultatas| Ar testas pavyko?|
+|---------|------|-----------------|-----------------|-----------------|-----------------|
+| SortingTest.SortByAverage| Įsitikinti, kad `sortByAverageClass()` surūšiuoja studentus nuo mažiausio iki didžiausio pažymio.| Studentas `a` su aukštu galutiniu pažymiu, studentas `b` su žemu.|Iškviečiama `sortByAverageClass()`.| `b` turi būti pirmas sąraše. | TAIP|
+
+Vykdomų testų rezultatai:
+
+<img width="594" alt="Screenshot 2025-05-08 at 21 03 22" src="https://github.com/user-attachments/assets/0876a357-2378-4688-9a43-b9e8537aa71c" />
+
+
+<img width="931" alt="Screenshot 2025-05-08 at 21 04 15" src="https://github.com/user-attachments/assets/29da7331-e8ba-42d8-9719-abf524c25db4" />
+
+
+
+
 
 v1.5
 
