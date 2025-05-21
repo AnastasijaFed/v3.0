@@ -34,7 +34,6 @@ using namespace std;
           void printStudentListClass(Vector<StudentClass> &students);
             void generateGradesClass(Vector<StudentClass> &students);
         Vector<string> loadFromFileClass(const string &filename);
-      void writeStudentsToFile(const Vector<StudentClass>& students, const string& filename);
           static Vector<StudentClass> readStudentsFileClass(const string &filename);
         Vector<StudentClass> generateRandomStudentsClass(int count);
           Vector<StudentClass> testClass();
@@ -43,12 +42,13 @@ using namespace std;
         static bool compareByAverageClass(const StudentClass& a, const StudentClass& b);
         Vector<StudentClass> sortByNameClass(Vector<StudentClass>& students);
         Vector<StudentClass> sortBySurnameClass(Vector<StudentClass>& students);
-        Vector<StudentClass> sortByAverageClass(Vector<StudentClass>& students);
-        void logDuration(const string& message, const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& stop);
+        static Vector<StudentClass> sortByAverageClass(Vector<StudentClass>& students);
+        static void logDuration(const string& message, const std::chrono::high_resolution_clock::time_point& start, const std::chrono::high_resolution_clock::time_point& stop);
         void generateStudentsFileClass(int numberOfStudents);
-        void sortStudentsInFileClass(Vector<StudentClass>& students,int numberOfStudents);
-        void strategyTwoVectorClass(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
-        void strategyThreeVector(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
+        static void sortStudentsInFileClass(Vector<StudentClass>& students,int numberOfStudents);
+        static void strategyTwoVectorClass(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
+        static void strategyThreeVector(Vector<StudentClass>& students, Vector<StudentClass>& vargsiukai, int num);
+        static void writeStudentsToFile(const Vector<StudentClass>& students, const string& filename);
 
 
 

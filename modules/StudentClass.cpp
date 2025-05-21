@@ -130,7 +130,7 @@ void StudentClass::writeStudentsToFile(const Vector<StudentClass>& students, con
     ofstream outputFile(filename);
 
     if (!outputFile.is_open()) {
-        cerr << "Klaida: failo negalima atidaryti " << filename << endl;
+      cerr << "Klaida: failo negalima atidaryti " << filename << endl;
         return;
     }
 
@@ -373,7 +373,15 @@ void StudentClass::strategyThreeVector(Vector<StudentClass> &students, Vector<St
     cout << to_string(num) + "  str 3 irasu dalijimas i vector: " << elapsed_seconds << "s" << endl;
     string kietekaiFilename = "kietekai" + to_string(num) + ".txt";
     string vargsiukaiFilename = "vargsiukai" + to_string(num) + ".txt";
+
+    auto startWrite1 = high_resolution_clock::now();
     writeStudentsToFile(vargsiukai, vargsiukaiFilename);
+    auto stopWrite1 = high_resolution_clock::now();
+    logDuration(to_string(num) + " vargšiukų rašymo į failą laikas: ", startWrite1, stopWrite1);
+
+    auto startWrite2 = high_resolution_clock::now();
     writeStudentsToFile(students, kietekaiFilename);
+    auto stopWrite2 = high_resolution_clock::now();
+    logDuration(to_string(num) + " kietekų rašymo į failą laikas: ", startWrite2, stopWrite2);
 }
 

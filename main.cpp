@@ -211,12 +211,39 @@ int main() {
         }
         case 7:
         {
-            cout<<"klases"<<endl;
-            studentsClass2.clear();
-            studentClass.sortStudentsInFileClass(studentsClass2, 100000);
-            studentsClass2.clear();
-            studentClass.sortStudentsInFileClass(studentsClass2, 1000000);
-            studentsClass2.clear();
+            cout<<"mano Vector"<<endl;
+            cout << "-----------------------------------------------------------"<<endl;
+            auto start1 = high_resolution_clock::now();
+            Vector<StudentClass> students;
+            StudentClass::sortStudentsInFileClass(students, 100000);
+            auto stop1 = std::chrono::high_resolution_clock::now();
+            auto duration_ms1 = std::chrono::duration_cast<std::chrono::milliseconds>(stop1 - start1);
+            double duration_s1 = duration_ms1.count() / 1000.0;
+            cout<<"100000 įrašų testo laikas: " << duration_s1 << "sec" << endl;
+
+
+
+			auto start2 = high_resolution_clock::now();
+            Vector<StudentClass> students2;
+            StudentClass::sortStudentsInFileClass(students2, 1000000);
+            auto stop2 = std::chrono::high_resolution_clock::now();
+            auto duration_ms2 = std::chrono::duration_cast<std::chrono::milliseconds>(stop2 - start2);
+            double duration_s2 = duration_ms2.count() / 1000.0;
+            cout<<"1000000 įrašų testo laikas: " << duration_s2 << "sec" << endl;
+
+			auto start3 = high_resolution_clock::now();
+            Vector<StudentClass> students3;
+            StudentClass::sortStudentsInFileClass(students3, 10000000);
+            auto stop3 = std::chrono::high_resolution_clock::now();
+            auto duration_ms3 = std::chrono::duration_cast<std::chrono::milliseconds>(stop3 - start3);
+            double duration_s3 = duration_ms3.count() / 1000.0;
+            cout<<"10000000 įrašų testo laikas: " << duration_s3 << "sec" << endl;
+
+
+
+
+
+
             break;
         }
             case 8:

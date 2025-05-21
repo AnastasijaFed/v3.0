@@ -12,7 +12,7 @@ funkcijų atitinkančių std::vector funkcijas. Pateikta ataskaita 5 pagrindini�
 
 Kad galėtume įvertinti sukurtos klasės efektyvumą, palyginsime ją su std::vector. Lyginsime laiką pildant skirtingą kiekį int elementų naudojant push_back(). Tyrimų vidurkiai pateikti lentelėje:
 
-| Elementų skaičius | Vidurkis std::vector | Vidurkis std::vector |
+| Elementų skaičius | Vidurkis std::vector | Vidurkis mano Vector |
 |-------------------|----------------------|----------------------|
 | 10000             | 0.00106633 sec       | 0.000512 sec         |
 | 100000            | 0.00467138 sec       | 0.00362867 sec       |
@@ -24,6 +24,45 @@ Iš šio tyrimo galima matyti, kad sukurta Vector klasė yra spartesnė nei std:
 
 Taip pat buvo atliktas tyrimas užpildant vektorių 100000000 int elementų, kurio tikslas buvo patikrinti kiek kartu vyksta atminties perskirstymai. Tyrimo rezultatas parodė, kad
 <strong>tiek std::vector, tiek Vector atliko atminties perskirstymus 28 kartus</strong>.
+
+Taip pat buvo atliktas tyrimas su StudentClass objektais atliekant įvairias funkcijas aprašytas lentelėje su laikų vidurkiais lyginant std::vector ir Vector:
+
+100000 įrašų:
+
+| Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
+|-----------------------------------|----------------------|----------------------|
+| Nuskaitymas iš failo              | 0.574                | 0.000512 sec         |
+| Įrašų rūšiavimas                  | 0.101                | 0.00362867 sec       |
+| Įrašų dalijimas į du konteinerius | 0.016758             | 0.0194655 sec        |
+| Kietekų rašymas į failą           | 0.129                | 0.221459 sec         |
+| Vargšiukų rašymas į failą         | 0.183                | 1.9494 sec           |
+| Visas programos veikimo laikas    | 1.013                | 1.9494 sec           |
+
+
+1000000 įrašų:
+
+| Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
+|-----------------------------------|----------------------|----------------------|
+| Nuskaitymas iš failo              | 5.693                | 0.000512 sec         |
+| Įrašų rūšiavimas                  | 1.175                | 0.00362867 sec       |
+| Įrašų dalijimas į du konteinerius | 0.160981333          | 0.0194655 sec        |
+| Kietekų rašymas į failą           | 1.309                | 0.221459 sec         |
+| Vargšiukų rašymas į failą         | 1.852                | 1.9494 sec           |
+| Visas programos veikimo laikas    | 10.291               | 1.9494 sec           |
+
+10000000 įrašų:
+
+| Atliekamas veiksmas               | Vidurkis mano Vector | Vidurkis std::vector |
+|-----------------------------------|----------------------|----------------------|
+| Nuskaitymas iš failo              | 62.813               | 0.000512 sec         |
+| Įrašų rūšiavimas                  | 13.445               | 0.00362867 sec       |
+| Įrašų dalijimas į du konteinerius | 1.962076584          | 0.0194655 sec        |
+| Kietekų rašymas į failą           | 18.94                | 0.221459 sec         |
+| Vargšiukų rašymas į failą         | 13.758               | 1.9494 sec           |
+| Visas programos veikimo laikas    | 111.931076           | 1.9494 sec           |
+
+
+
 v2.0
 
 Šioje versijoje buvo atlikti Unit Test'ai naudojant Google Test framework'ą. Buvo patikrinta tiek pagrindinė programos logika, tiek "Rule of Five" metodai. Apačioje pateikta išsami kiekvieno testo dokumentacija:
