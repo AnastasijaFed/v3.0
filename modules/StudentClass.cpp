@@ -144,10 +144,11 @@ void StudentClass::writeStudentsToFile(const Vector<StudentClass>& students, con
 
 Vector<StudentClass> StudentClass::readStudentsFileClass(const string& filename) {
     Vector<StudentClass> students;
-    ifstream file(filename);
+    string name = "modules/" + filename;
+    ifstream file(name);
 
     if (!file.is_open()) {
-        cerr << "Klaida: Nepavyko atidaryti failo: " << filename << endl;
+        cerr << "Klaida: Nepavyko atidaryti failo: " << name << endl;
         return students;
     }
     else{

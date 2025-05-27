@@ -20,9 +20,9 @@ template<class T, typename Allocator = allocator<T>>
 class Vector {
 
 private:
-    T* vector;   // pointer to first data element
-    size_t cpct;   // current memory capacity
-    size_t curr_idx;   // current vector size (same as numel)
+    T* vector;
+    size_t cpct;
+    size_t curr_idx;
     Allocator alloc;
 
 
@@ -42,14 +42,6 @@ public:
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  /*
-  friend bool operator==<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-  friend bool operator!=<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-  friend bool operator<<>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-  friend bool operator<=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-  friend bool operator>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-  friend bool operator>=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs);
-*/
 
   //MEMBER FUNCTIONS
 
@@ -68,7 +60,7 @@ public:
        // Constructor that accepts an initializer list
      Vector(std::initializer_list<T> init_list) {
         size_t count = init_list.size();
-        vector = alloc.allocate(count);  // Allocate memory for the vector
+        vector = alloc.allocate(count);
         cpct = count;
         curr_idx = count;
         std::uninitialized_copy(init_list.begin(), init_list.end(), vector);
@@ -87,7 +79,7 @@ public:
     Vector(const Vector& other)
     : cpct(other.cpct),
       curr_idx(other.curr_idx),
-      alloc(other.alloc) // copy the allocator
+      alloc(other.alloc)
 {
     vector = allocator_traits<Allocator>::allocate(alloc, cpct);
     for (size_t i = 0; i < curr_idx; ++i) {
@@ -261,7 +253,7 @@ const T* end() const { return (vector != nullptr) ? vector + curr_idx : nullptr;
 
     // Move existing elements to new allocation
     for (size_t i = 0; i < curr_idx; ++i) {
-    std::allocator_traits<Allocator>::construct(alloc, new_data + i, vector[i]); // copy instead of move
+    std::allocator_traits<Allocator>::construct(alloc, new_data + i, vector[i]);
     std::allocator_traits<Allocator>::destroy(alloc, vector + i);
 }
 
@@ -582,7 +574,7 @@ bool operator<=(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs
 
 template<class T, class Allocator>
 bool operator>(const Vector<T, Allocator>& lhs, const Vector<T, Allocator>& rhs) {
-    return rhs < lhs; // Daugiau yra tas pats, kas "dešinė pusė mažesnė už kairę".
+    return rhs < lhs;
 }
 
 template<class T, class Allocator>

@@ -3,6 +3,9 @@
 #include "modules/StudentDeque.h"
 #include "modules/StudentClass.h"
 #include "modules/Human.h"
+#include "modules/Student.h"
+#include "modules/Vector.h"
+
 
 using namespace std;
 
@@ -10,6 +13,7 @@ using namespace std;
 
 
 int main() {
+    std::cout << "Working directory: " << std::filesystem::current_path() << std::endl;
     vector<Student> students;
     Vector<StudentClass> studentsClass;
     Vector<StudentClass> studentsClass2;

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <numeric>
 #include <iomanip>
+#include <cstdint>
 
 struct Student {
     std::string name;
