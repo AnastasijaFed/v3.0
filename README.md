@@ -1,4 +1,7 @@
 v3.0
+Programos paleidimui parsisiųskite projekto aplankalą ir du kartus paspauskite RunMyApp.command failą.
+
+
 Šioje versijoje buvo realizuota Vector klasė atitinkanti std::vector konteinerį. Ši klasė realizuoja virš 80%
 funkcijų atitinkančių std::vector funkcijas. Pateikta ataskaita 5 pagrindinių funkcijų:
 
